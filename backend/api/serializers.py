@@ -167,8 +167,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class CreateOrderItemInputSerializer(serializers.Serializer):
-    product_id = serializers.IntegerField(min_value=1)
-    quantity = serializers.IntegerField(min_value=1)
+    product_id = serializers.IntegerField(min_value=1, max_value=2**63 - 1)
+    quantity = serializers.IntegerField(min_value=1, max_value=2**31 - 1)
 
 
 class CreateOrderSerializer(serializers.Serializer):

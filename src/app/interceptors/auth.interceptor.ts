@@ -45,6 +45,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       return authService.refreshAccessToken().pipe(
+        catchError((refreshError) => {
+          authService.logout();
+          return throwError(() => refreshError);
+        }),
         switchMap((newAccessToken) => {
           const retryRequest = requestWithAuth.clone({
             setHeaders: {
@@ -52,11 +56,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             },
             context: requestWithAuth.context.set(RETRY_REQUEST, true)
           });
-          return next(retryRequest);
-        }),
-        catchError((refreshError) => {
-          authService.logout();
-          return throwError(() => refreshError);
+          return next(retryRequest).pipe(
+            catchError((retryError) => {
+              if (retryError?.status === 401) {
+                authService.logout();
+              }
+              return throwError(() => retryError);
+            })
+          );
         })
       );
     })

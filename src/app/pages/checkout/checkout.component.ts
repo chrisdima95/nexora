@@ -31,7 +31,7 @@ export class CheckoutComponent implements OnInit {
     first_name: new FormControl('', [Validators.required]),
     last_name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required])
   });
 
@@ -51,7 +51,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     if (this.isLoggedIn) {
-      this.proceedToReview('logged');
+      this.proceedToReview();
     }
   }
 
@@ -89,7 +89,7 @@ export class CheckoutComponent implements OnInit {
           next: () => {
             this.isLoggedIn = true;
             this.cdr.markForCheck();
-            this.proceedToReview('logged');
+            this.proceedToReview();
           },
           error: () => alert('Credenziali non valide')
         });
@@ -133,7 +133,7 @@ export class CheckoutComponent implements OnInit {
           next: () => {
             this.isLoggedIn = true;
             this.cdr.markForCheck();
-            this.proceedToReview('registered');
+            this.proceedToReview();
           },
           error: () => alert('Errore durante la registrazione')
         });
@@ -143,14 +143,8 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  continueAsGuest() {
-    this.proceedToReview('guest');
-  }
-
-  private proceedToReview(mode: 'guest' | 'logged' | 'registered') {
-    this.router.navigate(['/checkout/review'], {
-      queryParams: { mode }
-    });
+  private proceedToReview() {
+    this.router.navigate(['/checkout/review']);
   }
 
   togglePasswordVisibility() {
@@ -190,7 +184,7 @@ export class CheckoutComponent implements OnInit {
       return 'La password è obbligatoria';
     }
     if (this.registerPassword?.hasError('minlength')) {
-      return 'La password deve essere di almeno 6 caratteri';
+      return 'La password deve essere di almeno 8 caratteri';
     }
     return '';
   }

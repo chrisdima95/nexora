@@ -3,6 +3,9 @@
     <h1>Riepilogo ordine</h1>
     <p class="subtitle">Controlla i prodotti e conferma il tuo acquisto.</p>
     <p class="account-note">{{ accountMessage }}</p>
+    @if(errorMessage) {
+      <p class="account-note" role="alert">{{ errorMessage }}</p>
+    }
 
     <section class="items-section">
       <h2 class="section-title">Articoli nel carrello</h2>

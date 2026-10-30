@@ -1,13 +1,14 @@
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+from sqlite3 import SQLITE_BUSY, SQLITE_LOCKED
 from uuid import uuid4
 
-from django.db import transaction
+from django.db import OperationalError, connection, transaction
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import F, Q
@@ -199,6 +200,18 @@ class MeView(APIView):
         return Response(MeSerializer(request.user).data)
 
 
+class StockUnavailable(APIException):
+    status_code = status.HTTP_409_CONFLICT
+    default_code = "insufficient_stock"
+
+
+class OrderDatabaseBusy(APIException):
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    default_detail = "Il servizio ordini è occupato. Riprova tra pochi secondi."
+    default_code = "order_database_busy"
+    wait = 1
+
+
 class OrderViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
@@ -214,7 +227,14 @@ class OrderViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         input_serializer = CreateOrderSerializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
-        order = self._build_order(request.user, input_serializer.validated_data["items"])
+        try:
+            order = self._build_order(request.user, input_serializer.validated_data["items"])
+        except OperationalError as exc:
+            # Handle SQLite contention only after atomic() has rolled back.
+            error_code = getattr(exc.__cause__, "sqlite_errorcode", 0)
+            if connection.vendor == "sqlite" and error_code & 0xFF in (SQLITE_BUSY, SQLITE_LOCKED):
+                raise OrderDatabaseBusy() from exc
+            raise
         output_serializer = self.get_serializer(order)
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -226,10 +246,24 @@ class OrderViewSet(ModelViewSet):
             quantity = int(item["quantity"])
             aggregated[product_id] = aggregated.get(product_id, 0) + quantity
 
+        # The first database operation is a conditional write, avoiding SQLite's
+        # read-to-write lock upgrade. Stable ordering also limits lock inversions
+        # on databases that support row locks. Never trust frontend stock values.
+        for product_id, quantity in sorted(aggregated.items()):
+            updated = Product.objects.filter(
+                pk=product_id, stock_quantity__gte=quantity
+            ).update(stock_quantity=F("stock_quantity") - quantity)
+            if not updated:
+                product = Product.objects.filter(pk=product_id).first()
+                if product is None:
+                    raise ValidationError({"items": f"Prodotto non trovato: {product_id}."})
+                raise StockUnavailable(
+                    f'Disponibilità insufficiente per "{product.name}": '
+                    f"richiesti {quantity}, disponibili {product.stock_quantity}. "
+                    "Aggiorna il carrello prima di riprovare."
+                )
+
         products = Product.objects.in_bulk(aggregated.keys())
-        missing_ids = [product_id for product_id in aggregated if product_id not in products]
-        if missing_ids:
-            raise ValidationError({"items": f"Prodotti non trovati: {missing_ids}"})
 
         order_number = self._generate_order_number()
         order = Order.objects.create(

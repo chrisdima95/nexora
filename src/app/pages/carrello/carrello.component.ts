@@ -60,9 +60,7 @@ export class CarrelloComponent implements OnInit {
     }
 
     if (this.isLoggedIn) {
-      this.router.navigate(['/checkout/review'], {
-        queryParams: { mode: 'logged' }
-      });
+      this.router.navigate(['/checkout/review']);
       return;
     }
 

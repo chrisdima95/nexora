@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CartItem, CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { OrderService } from '../../services/order.service';
 import { CreateOrderPayload } from '../../models/order.model';
-
-type CheckoutMode = 'guest' | 'logged' | 'registered';
 
 @Component({
   selector: 'app-checkout-review',
@@ -27,20 +26,26 @@ export class CheckoutReviewComponent implements OnInit {
   cartItems: CartItem[] = [];
   totalPrice = 0;
   isSubmitting = false;
+  errorMessage = '';
 
-  mode: CheckoutMode = 'guest';
   userEmail = '';
 
   constructor(
     private cartService: CartService,
     private authService: AuthService,
     private orderService: OrderService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadCheckoutMode();
+    if (this.cartService.getCartItems().length === 0) {
+      this.router.navigate(['/carrello']);
+      return;
+    }
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/checkout']);
+      return;
+    }
     this.loadUserInfo();
 
     this.cartService.cartItems$
@@ -51,9 +56,6 @@ export class CheckoutReviewComponent implements OnInit {
         this.cdr.markForCheck();
       });
 
-    if (this.cartService.getCartItems().length === 0) {
-      this.router.navigate(['/carrello']);
-    }
   }
 
   confirmOrder(): void {
@@ -62,11 +64,12 @@ export class CheckoutReviewComponent implements OnInit {
     }
 
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/checkout']);
       return;
     }
 
     this.isSubmitting = true;
+    this.errorMessage = '';
     const payload: CreateOrderPayload = {
       items: this.cartItems.map((item) => ({
         product_id: item.productId,
@@ -81,9 +84,20 @@ export class CheckoutReviewComponent implements OnInit {
           state: { order }
         });
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
         this.isSubmitting = false;
-        alert('Impossibile completare l\'ordine. Riprova.');
+        if (error.status === 401 || error.status === 403) {
+          this.router.navigate(['/checkout']);
+          return;
+        }
+        const detail = [400, 409, 503].includes(error.status)
+          ? error.error?.detail ?? error.error?.items
+          : null;
+        this.errorMessage = typeof detail === 'string'
+          ? detail
+          : Array.isArray(detail) && detail.every((message) => typeof message === 'string')
+            ? detail.join(' ')
+            : "Impossibile completare l'ordine. Riprova.";
         this.cdr.markForCheck();
       }
     });
@@ -98,10 +112,6 @@ export class CheckoutReviewComponent implements OnInit {
   }
 
   get accountMessage(): string {
-    if (this.mode === 'guest') {
-      return "Stai completando l'acquisto come ospite.";
-    }
-
     if (this.userEmail) {
       return `Ordine associato all'account ${this.userEmail}`;
     }
@@ -109,23 +119,18 @@ export class CheckoutReviewComponent implements OnInit {
     return "Stai completando l'acquisto con il tuo account.";
   }
 
-  private loadCheckoutMode(): void {
-    const modeParam = this.route.snapshot.queryParamMap.get('mode');
-    if (modeParam === 'logged' || modeParam === 'registered' || modeParam === 'guest') {
-      this.mode = modeParam;
-    } else if (this.authService.isAuthenticated()) {
-      this.mode = 'logged';
-    }
-
-    // Manteniamo la logica mode per il flusso checkout senza esporre dettagli tecnici in UI.
-  }
-
   private loadUserInfo(): void {
     this.authService.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
       this.userEmail = user?.email ?? '';
       this.cdr.markForCheck();
     });
-    this.authService.fetchMe().subscribe();
+    this.authService.fetchMe().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 401 || error.status === 403) {
+          this.router.navigate(['/checkout']);
+        }
+      }
+    });
   }
 
   private toNumber(value: number | string | null | undefined): number {

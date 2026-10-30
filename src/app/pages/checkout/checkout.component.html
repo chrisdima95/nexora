@@ -3,7 +3,7 @@
       <!-- Sezione Login -->
       <div class="checkout-section login-section">
         <h2>Già registrato?</h2>
-        <p class="section-subtitle">Accedi subito:</p>
+        <p class="section-subtitle">Accedi al tuo account per confermare l'ordine.</p>
 
         <form [formGroup]="loginForm" (ngSubmit)="login()">
           <div class="form-group">
@@ -69,7 +69,7 @@
       <!-- Sezione Registrazione -->
       <div class="checkout-section register-section">
         <h2>Nuovo Cliente?</h2>
-        <p class="section-subtitle">Registrati gratuitamente e goditi i vantaggi:</p>
+        <p class="section-subtitle">Crea un account per confermare l'ordine e consultare lo storico.</p>
 
         <ul class="benefits-list">
           <li>
@@ -226,18 +226,5 @@
         }
       </div>
 
-      <!-- Sezione Ospite -->
-      <div class="checkout-section guest-section">
-        <h2>Ordina come ospite</h2>
-        <p class="privacy-text">
-          Prima di continuare leggi la nostra <span class="privacy-link">privacy policy</span>
-        </p>
-        <button type="button" class="btn-secondary" (click)="continueAsGuest()">
-          Continua senza registrazione
-        </button>
-        <p class="legal-text">
-          Testo dimostrativo: il titolare del trattamento dati per questa demo è indicato come <strong>Nexora Demo S.r.l.</strong>, con finalità di gestione dell’ordine prototipale, adempimenti di legge, backup di sistema e assistenza. Contenuto non contrattuale; sostituire con informativa privacy reale in produzione.
-        </p>
-      </div>
   </div>
 </div>
