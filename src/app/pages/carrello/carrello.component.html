@@ -1,0 +1,62 @@
+<div class="carrello-container">
+  <h1 class="cart-title">Carrello</h1>
+
+  @if(cartItems.length === 0) {
+    <div class="empty-cart">
+      <div class="cart-icon-wrapper">
+        <img src="/Carrello.png" alt="Carrello vuoto" class="cart-icon" />
+      </div>
+      <p class="empty-title">Il tuo carrello e vuoto.</p>
+      <p class="empty-message">Aggiungi qualche prodotto per iniziare il tuo acquisto.</p>
+      <a routerLink="/home" class="browse-link">Esplora il catalogo</a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <div class="cart-items">
+        @for(item of cartItems; track item.id) {
+          <article class="cart-item">
+            <img [src]="item.imgSrc" [alt]="item.imgAlt" class="item-image" />
+            <div class="item-details">
+              <h2 class="item-title">{{ item.title }}</h2>
+              <p class="item-price">Prezzo: {{ formatCurrency(item.unitPrice) }}</p>
+              <p class="item-subtotal">Subtotale: {{ formatCurrency(getItemSubtotal(item.id)) }}</p>
+            </div>
+            <div class="item-actions">
+              <div class="item-quantity">
+                <button type="button" class="quantity-btn" (click)="updateQuantity(item.id, item.quantity - 1)" [attr.aria-label]="'Diminuisci quantita di ' + item.title">−</button>
+                <span class="quantity" aria-live="polite">{{ item.quantity }}</span>
+                <button type="button" class="quantity-btn" (click)="updateQuantity(item.id, item.quantity + 1)" [attr.aria-label]="'Aumenta quantita di ' + item.title">+</button>
+              </div>
+              <button type="button" (click)="removeItem(item.id)" class="remove-btn" [attr.aria-label]="'Rimuovi ' + item.title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+
+      <aside class="cart-summary" aria-label="Riepilogo ordine">
+        <h2 class="summary-title">Riepilogo ordine</h2>
+        <div class="summary-row">
+          <span class="summary-label">Articoli</span>
+          <span class="summary-value">{{ totalItemsCount }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Subtotale</span>
+          <span class="summary-value">{{ formatCurrency(totalPrice) }}</span>
+        </div>
+        <div class="summary-row total-row">
+          <span class="summary-label">Totale</span>
+          <span class="summary-value total-price">{{ formatCurrency(totalPrice) }}</span>
+        </div>
+        <div class="summary-actions">
+          <button type="button" (click)="proceedToCheckout()" class="summary-btn summary-btn--primary">{{ checkoutButtonLabel }}</button>
+          <a routerLink="/home" class="summary-btn summary-btn--secondary">Continua gli acquisti</a>
+        </div>
+      </aside>
+    </div>
+  }
+</div>

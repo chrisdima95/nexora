@@ -1,0 +1,191 @@
+@if (defs[category]; as def) {
+  <aside class="cf-desktop" aria-label="Filtri catalogo">
+    <div class="cf-panel">
+      <div class="cf-panel-head">
+        <h2 class="cf-title">Filtri</h2>
+        <button
+          type="button"
+          class="cf-reset"
+          (click)="reset()"
+          [disabled]="activeFilterCount() === 0"
+          aria-label="Reimposta tutti i filtri"
+        >
+          Reimposta
+        </button>
+      </div>
+
+      <p class="cf-meta" role="status" aria-live="polite" aria-atomic="true">
+        @if (activeSummaries.length > 0) {
+          <span class="cf-meta-line">
+            <strong>{{ filtered.length }}</strong>
+            @if (filtered.length === 1) {
+              prodotto
+            } @else {
+              prodotti
+            }
+            <span class="cf-meta-of">su {{ products.length }} in catalogo</span>
+          </span>
+        } @else {
+          <span class="cf-meta-line">
+            <strong>{{ filtered.length }}</strong>
+            @if (filtered.length === 1) {
+              prodotto
+            } @else {
+              prodotti
+            }
+          </span>
+        }
+      </p>
+
+      @if (activeSummaries.length > 0) {
+        <div class="cf-active" aria-label="Filtri applicati">
+          <ul class="cf-chips" role="list">
+            @for (s of activeSummaries; track s.controlId) {
+              <li class="cf-chip" role="listitem">
+                <span class="cf-chip-text">
+                  <span class="cf-chip-group">{{ s.groupLabel }}</span>
+                  <span class="cf-chip-sep" aria-hidden="true">:</span>
+                  <span class="cf-chip-value">{{ s.valueLabel }}</span>
+                </span>
+                <button
+                  type="button"
+                  class="cf-chip-remove"
+                  (click)="clearFilter(s.controlId)"
+                  [attr.aria-label]="'Rimuovi filtro ' + s.groupLabel + ': ' + s.valueLabel"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+      } @else {
+        <p class="cf-idle-hint">Nessun filtro attivo.</p>
+      }
+
+      <div class="cf-controls" role="group" aria-label="Affina i risultati">
+        @for (c of def.controls; track c.id) {
+          <div class="cf-field">
+            <label class="cf-label" [attr.for]="'cf-' + category + '-' + c.id">{{ c.label }}</label>
+            <select
+              class="cf-select"
+              [class.cf-select--active]="controlValue(c.id).trim().length > 0"
+              [id]="'cf-' + category + '-' + c.id"
+              [value]="controlValue(c.id)"
+              (change)="onSelect(c.id, $any($event.target).value)"
+            >
+              <option value="">{{ c.emptyLabel }}</option>
+              @for (opt of optionsFor(c.id); track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+          </div>
+        }
+      </div>
+    </div>
+  </aside>
+
+  <div class="cf-mobile">
+    <div class="cf-mobile-bar">
+      <button
+        type="button"
+        class="cf-open"
+        (click)="openDrawer()"
+        [attr.aria-expanded]="drawerOpen"
+      >
+        Filtri
+        @if (activeFilterCount() > 0) {
+          <span class="cf-badge" aria-hidden="true">{{ activeFilterCount() }}</span>
+        }
+      </button>
+      <p class="cf-inline-meta" role="status" aria-live="polite" aria-atomic="true">
+        @if (activeSummaries.length > 0) {
+          <span><strong>{{ filtered.length }}</strong> / {{ products.length }}</span>
+        } @else {
+          <span><strong>{{ filtered.length }}</strong> prodotti</span>
+        }
+      </p>
+    </div>
+  </div>
+
+  @if (drawerOpen) {
+    <div class="cf-backdrop" (click)="closeDrawer()" aria-hidden="true"></div>
+    <div class="cf-drawer" role="dialog" aria-modal="true" aria-label="Filtri catalogo">
+      <div class="cf-drawer-head">
+        <h2 class="cf-title" id="cf-drawer-title">Filtri</h2>
+        <button type="button" class="cf-close" (click)="closeDrawer()" aria-label="Chiudi filtri">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="cf-drawer-body">
+        <div class="cf-drawer-scroll">
+          <p class="cf-drawer-meta" role="status" aria-live="polite" aria-atomic="true">
+            @if (activeSummaries.length > 0) {
+              <span><strong>{{ filtered.length }}</strong> prodotti su {{ products.length }}</span>
+            } @else {
+              <span><strong>{{ filtered.length }}</strong> prodotti in catalogo</span>
+            }
+          </p>
+
+          @if (activeSummaries.length > 0) {
+            <div class="cf-active cf-active--drawer" aria-label="Filtri applicati">
+              <ul class="cf-chips" role="list">
+                @for (s of activeSummaries; track s.controlId) {
+                  <li class="cf-chip" role="listitem">
+                    <span class="cf-chip-text">
+                      <span class="cf-chip-group">{{ s.groupLabel }}</span>
+                      <span class="cf-chip-sep" aria-hidden="true">:</span>
+                      <span class="cf-chip-value">{{ s.valueLabel }}</span>
+                    </span>
+                    <button
+                      type="button"
+                      class="cf-chip-remove"
+                      (click)="clearFilter(s.controlId)"
+                      [attr.aria-label]="'Rimuovi filtro ' + s.groupLabel + ': ' + s.valueLabel"
+                    >
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            </div>
+          } @else {
+            <p class="cf-idle-hint cf-idle-hint--drawer">Nessun filtro attivo.</p>
+          }
+
+          <div class="cf-controls cf-controls--drawer" role="group" aria-labelledby="cf-drawer-title">
+            @for (c of def.controls; track c.id) {
+              <div class="cf-field">
+                <label class="cf-label" [attr.for]="'cf-m-' + category + '-' + c.id">{{ c.label }}</label>
+                <select
+                  class="cf-select"
+                  [class.cf-select--active]="controlValue(c.id).trim().length > 0"
+                  [id]="'cf-m-' + category + '-' + c.id"
+                  [value]="controlValue(c.id)"
+                  (change)="onSelect(c.id, $any($event.target).value)"
+                >
+                  <option value="">{{ c.emptyLabel }}</option>
+                  @for (opt of optionsFor(c.id); track opt.value) {
+                    <option [value]="opt.value">{{ opt.label }}</option>
+                  }
+                </select>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="cf-drawer-actions">
+          <button
+            type="button"
+            class="cf-reset cf-reset--block"
+            (click)="reset()"
+            [disabled]="activeFilterCount() === 0"
+            aria-label="Reimposta tutti i filtri"
+          >
+            Reimposta filtri
+          </button>
+          <button type="button" class="cf-apply" (click)="closeDrawer()">Mostra risultati</button>
+        </div>
+      </div>
+    </div>
+  }
+}

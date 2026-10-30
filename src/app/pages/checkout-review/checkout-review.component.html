@@ -1,0 +1,49 @@
+<div class="review-container">
+  <div class="review-card">
+    <h1>Riepilogo ordine</h1>
+    <p class="subtitle">Controlla i prodotti e conferma il tuo acquisto.</p>
+    <p class="account-note">{{ accountMessage }}</p>
+
+    <section class="items-section">
+      <h2 class="section-title">Articoli nel carrello</h2>
+      <div class="items-list">
+        @for(item of cartItems; track item.id) {
+          <article class="item-row">
+            <img [src]="item.imgSrc" [alt]="item.imgAlt" class="item-image" />
+            <div class="item-content">
+              <h3>{{ item.title }}</h3>
+              <p>Prezzo unitario: {{ formatCurrency(item.unitPrice) }}</p>
+              <p>Quantita: {{ item.quantity }}</p>
+            </div>
+            <div class="item-subtotal">{{ formatCurrency(getItemSubtotal(item.id)) }}</div>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="summary-section">
+      <h2 class="section-title">Riepilogo economico</h2>
+      <div class="totals-box">
+        <div class="total-row">
+          <span>Subtotale</span>
+          <strong>{{ formatCurrency(totalPrice) }}</strong>
+        </div>
+        <div class="total-row total-row-final">
+          <span>Totale ordine</span>
+          <strong>{{ formatCurrency(totalPrice) }}</strong>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a routerLink="/carrello" class="btn-secondary">Torna al carrello</a>
+        <button type="button" class="btn-primary" (click)="confirmOrder()" [disabled]="isSubmitting || cartItems.length === 0">
+          Conferma ordine
+        </button>
+      </div>
+    </section>
+
+    <div class="checkout-flow-note">
+      <span>Controlla il riepilogo prima di confermare l'ordine.</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,243 @@
+<div class="checkout-container">
+  <div class="checkout-content">
+      <!-- Sezione Login -->
+      <div class="checkout-section login-section">
+        <h2>Già registrato?</h2>
+        <p class="section-subtitle">Accedi subito:</p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <div class="form-group">
+            <label for="login-email" class="nexora-sr-only">Username</label>
+            <input 
+              type="text" 
+              formControlName="username" 
+              id="login-email"
+              placeholder="Inserisci username"
+              [class.error]="loginEmail?.invalid && loginEmail?.touched"
+              [attr.aria-invalid]="loginEmail?.invalid && loginEmail?.touched ? true : null"
+              [attr.aria-describedby]="loginEmail?.invalid && loginEmail?.touched ? 'login-email-error' : null"
+            />
+            @if(loginEmail?.invalid && loginEmail?.touched) {
+              <p class="error-message" id="login-email-error" role="alert">{{ getLoginEmailErrorMessage() }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="login-password" class="nexora-sr-only">Password</label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                formControlName="password" 
+                id="login-password"
+                placeholder="Password"
+                [class.error]="loginPassword?.invalid && loginPassword?.touched"
+                [attr.aria-invalid]="loginPassword?.invalid && loginPassword?.touched ? true : null"
+                [attr.aria-describedby]="loginPassword?.invalid && loginPassword?.touched ? 'login-password-error' : null"
+              />
+              <button 
+                type="button" 
+                class="password-toggle"
+                (click)="togglePasswordVisibility()"
+                aria-label="Mostra/Nascondi password"
+              >
+                @if(showPassword) {
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                } @else {
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                }
+              </button>
+            </div>
+            @if(loginPassword?.invalid && loginPassword?.touched) {
+              <p class="error-message" id="login-password-error" role="alert">La password è obbligatoria</p>
+            }
+          </div>
+
+          <span class="forgot-password" title="Funzionalità non disponibile in questa demo">Password dimenticata?</span>
+
+          <button type="submit" class="btn-primary" [disabled]="loginForm.invalid">
+            Accedi
+          </button>
+        </form>
+      </div>
+
+      <!-- Sezione Registrazione -->
+      <div class="checkout-section register-section">
+        <h2>Nuovo Cliente?</h2>
+        <p class="section-subtitle">Registrati gratuitamente e goditi i vantaggi:</p>
+
+        <ul class="benefits-list">
+          <li>
+            <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            Accumula punti con Nexora Club
+          </li>
+          <li>
+            <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            Sconti esclusivi in APP e sul sito
+          </li>
+          <li>
+            <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            Crea la tua Lista dei Desideri
+          </li>
+          <li>
+            <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            Ricevi tutte le promozioni via email o push
+          </li>
+          <li>
+            <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            Vedi sempre il tuo storico ordini
+          </li>
+        </ul>
+
+        <div class="cart-persistence-info">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>I prodotti aggiunti a carrello rimarranno disponibili anche dopo la registrazione.</span>
+        </div>
+
+        @if(showRegisterForm) {
+          <form [formGroup]="registerForm" (ngSubmit)="register()" class="register-form-inline">
+            <div class="form-group">
+              <label for="register-username" class="nexora-sr-only">Username</label>
+              <input type="text" formControlName="username" id="register-username" placeholder="Username" />
+            </div>
+            <div class="form-group">
+              <label for="register-firstname" class="nexora-sr-only">Nome</label>
+              <input type="text" formControlName="first_name" id="register-firstname" placeholder="Nome" />
+            </div>
+            <div class="form-group">
+              <label for="register-lastname" class="nexora-sr-only">Cognome</label>
+              <input type="text" formControlName="last_name" id="register-lastname" placeholder="Cognome" />
+            </div>
+            <div class="form-group">
+              <label for="register-email" class="nexora-sr-only">Email</label>
+              <input 
+                type="email" 
+                formControlName="email" 
+                id="register-email"
+                placeholder="Inserisci email"
+                [class.error]="registerEmail?.invalid && registerEmail?.touched"
+                [attr.aria-invalid]="registerEmail?.invalid && registerEmail?.touched ? true : null"
+                [attr.aria-describedby]="registerEmail?.invalid && registerEmail?.touched ? 'register-email-error' : null"
+              />
+              @if(registerEmail?.invalid && registerEmail?.touched) {
+                <p class="error-message" id="register-email-error" role="alert">{{ getRegisterEmailErrorMessage() }}</p>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="register-password" class="nexora-sr-only">Password</label>
+              <div class="password-input-wrapper">
+                <input 
+                  [type]="showRegisterPassword ? 'text' : 'password'" 
+                  formControlName="password" 
+                  id="register-password"
+                  placeholder="Password"
+                  [class.error]="registerPassword?.invalid && registerPassword?.touched"
+                  [attr.aria-invalid]="registerPassword?.invalid && registerPassword?.touched ? true : null"
+                  [attr.aria-describedby]="registerPassword?.invalid && registerPassword?.touched ? 'register-password-error' : null"
+                />
+                <button 
+                  type="button" 
+                  class="password-toggle"
+                  (click)="toggleRegisterPasswordVisibility()"
+                  aria-label="Mostra/Nascondi password"
+                >
+                  @if(showRegisterPassword) {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  } @else {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  }
+                </button>
+              </div>
+              @if(registerPassword?.invalid && registerPassword?.touched) {
+                <p class="error-message" id="register-password-error" role="alert">{{ getRegisterPasswordErrorMessage() }}</p>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="register-confirm-password" class="nexora-sr-only">Conferma password</label>
+              <div class="password-input-wrapper">
+                <input 
+                  [type]="showRegisterConfirmPassword ? 'text' : 'password'" 
+                  formControlName="confirmPassword" 
+                  id="register-confirm-password"
+                  placeholder="Conferma password"
+                  [class.error]="confirmPassword?.invalid && confirmPassword?.touched"
+                  [attr.aria-invalid]="confirmPassword?.invalid && confirmPassword?.touched ? true : null"
+                  [attr.aria-describedby]="confirmPassword?.invalid && confirmPassword?.touched ? 'register-confirm-error' : null"
+                />
+                <button 
+                  type="button" 
+                  class="password-toggle"
+                  (click)="toggleRegisterConfirmPasswordVisibility()"
+                  aria-label="Mostra/Nascondi password"
+                >
+                  @if(showRegisterConfirmPassword) {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  } @else {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  }
+                </button>
+              </div>
+              @if(confirmPassword?.invalid && confirmPassword?.touched) {
+                <p class="error-message" id="register-confirm-error" role="alert">Conferma la password</p>
+              }
+            </div>
+
+            <button type="submit" class="btn-primary" [disabled]="registerForm.invalid">
+              Registrati ora!
+            </button>
+          </form>
+        } @else {
+          <button type="button" class="btn-primary" (click)="register()">
+            Registrati ora!
+          </button>
+        }
+      </div>
+
+      <!-- Sezione Ospite -->
+      <div class="checkout-section guest-section">
+        <h2>Ordina come ospite</h2>
+        <p class="privacy-text">
+          Prima di continuare leggi la nostra <span class="privacy-link">privacy policy</span>
+        </p>
+        <button type="button" class="btn-secondary" (click)="continueAsGuest()">
+          Continua senza registrazione
+        </button>
+        <p class="legal-text">
+          Testo dimostrativo: il titolare del trattamento dati per questa demo è indicato come <strong>Nexora Demo S.r.l.</strong>, con finalità di gestione dell’ordine prototipale, adempimenti di legge, backup di sistema e assistenza. Contenuto non contrattuale; sostituire con informativa privacy reale in produzione.
+        </p>
+      </div>
+  </div>
+</div>

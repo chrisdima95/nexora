@@ -1,0 +1,67 @@
+<section class="search-results-page">
+  <header class="search-results-header">
+    <p class="search-results-label">{{ resultsContextLabel }}</p>
+    <h1>{{ pageHeading }}</h1>
+    @if (brandFilter && query) {
+      <p class="search-results-query">
+        Marchio: <strong>{{ brandFilter }}</strong>
+        <span class="search-results-query__sep" aria-hidden="true">·</span>
+        Ricerca: <strong>"{{ query }}"</strong>
+      </p>
+    } @else if (brandFilter) {
+      <p class="search-results-query">Marchio selezionato: <strong>{{ brandFilter }}</strong></p>
+    } @else if (query) {
+      <p class="search-results-query">Hai cercato: <strong>"{{ query }}"</strong></p>
+    }
+  </header>
+
+  @if (!query && !brandFilter) {
+    <div class="search-state-card">
+      <p>Inserisci un termine nella barra di ricerca oppure scegli un marchio dalla home.</p>
+      <a routerLink="/home">Torna alla home</a>
+    </div>
+  } @else if (loading) {
+    <div class="search-state-card">
+      <p>Caricamento risultati in corso...</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="search-state-card" role="alert">
+      <p>{{ errorMessage }}</p>
+      <a routerLink="/home">Torna alla home</a>
+    </div>
+  } @else if (cardsData.length === 0) {
+    <div class="search-state-card" role="status">
+      @if (brandFilter && query) {
+        <p>
+          Nessun prodotto trovato per il marchio <strong>{{ brandFilter }}</strong> con la ricerca
+          <strong>"{{ query }}"</strong>.
+        </p>
+      } @else if (brandFilter) {
+        <p>Nessun prodotto trovato per il marchio <strong>{{ brandFilter }}</strong>.</p>
+      } @else {
+        <p>Nessun prodotto trovato per <strong>"{{ query }}"</strong>.</p>
+      }
+      <p class="search-state-card__hint">Prova con un termine diverso o un altro marchio.</p>
+      <a routerLink="/home" class="search-state-card__cta">Torna alla home</a>
+    </div>
+  } @else {
+    <p class="search-results-count">
+      Prodotti trovati: <strong>{{ cardsData.length }}</strong>
+    </p>
+    <div class="search-sort-bar">
+      <label class="search-sort-label" for="search-sort">Ordina per</label>
+      <select
+        id="search-sort"
+        class="search-sort-select"
+        [value]="selectedSort"
+        (change)="onSortChange($any($event.target).value)"
+      >
+        @for (option of sortOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <app-cards [cards]="cardsData"></app-cards>
+  }
+</section>

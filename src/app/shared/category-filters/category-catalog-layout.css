@@ -1,0 +1,74 @@
+.category-catalog-page {
+  width: 100%;
+  max-width: var(--nexora-max-width);
+  margin: 0 auto;
+  padding: var(--nexora-page-pt) var(--nexora-gutter-x) var(--nexora-page-pb);
+  display: grid;
+  grid-template-columns: minmax(200px, 248px) minmax(0, 1fr);
+  gap: var(--nexora-category-catalog-split-gap);
+  align-items: start;
+}
+
+/*
+ * Con align-items: start l'item griglia del componente filtri restava alto quanto la sola sidebar.
+ * Il contenimento dello sticky segue quell'altezza: nessun "corridoio" verticale nella colonna filtri,
+ * quindi la sidebar scorre via con la pagina. Stretch solo sulla colonna filtri = altezza di riga
+ * uguale alla colonna prodotti; .cf-desktop (sticky) può restare sotto la navbar per tutto lo scroll.
+ */
+.category-catalog-page > app-category-product-filters {
+  align-self: stretch;
+}
+
+.category-catalog-main {
+  min-width: 0;
+}
+
+.catalog-sort-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  margin: 0 0 0.9rem;
+}
+
+.catalog-sort-label {
+  font-size: 0.86rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.catalog-sort-select {
+  min-height: 2.1rem;
+  border-radius: var(--nexora-radius-control);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: var(--color-white);
+  color: var(--color-text-strong);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.88rem;
+}
+
+/* Messaggio nessun risultato (filtri troppo restrittivi) */
+.category-catalog-empty {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--nexora-radius-control);
+  border: var(--nexora-border-subtle);
+  background: rgba(34, 211, 238, 0.08);
+  color: var(--color-text-strong);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.category-catalog-empty strong {
+  font-weight: 700;
+}
+
+@media (max-width: 880px) {
+  .category-catalog-page {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-sort-bar {
+    justify-content: space-between;
+  }
+}

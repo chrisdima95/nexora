@@ -1,0 +1,41 @@
+<div class="category-catalog-page">
+  @if (loading) {
+    <p class="category-catalog-empty" role="status">Caricamento catalogo computer...</p>
+  } @else if (loadError) {
+    <p class="category-catalog-empty" role="alert">
+      {{ loadErrorMessage }}
+    </p>
+  } @else if (allProducts.length === 0) {
+    <p class="category-catalog-empty" role="status">
+      Al momento non ci sono computer disponibili.
+    </p>
+  } @else {
+    <app-category-product-filters
+      [category]="'computer'"
+      [products]="allProducts"
+      (filteredChange)="onFiltered($event)"
+    />
+    <div class="category-catalog-main">
+      <div class="catalog-sort-bar">
+        <label class="catalog-sort-label" for="computer-sort">Ordina per</label>
+        <select
+          id="computer-sort"
+          class="catalog-sort-select"
+          [value]="selectedSort"
+          (change)="onSortChange($any($event.target).value)"
+        >
+          @for (option of sortOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+      @if (cardsData.length === 0) {
+        <p class="category-catalog-empty" role="status">
+          <strong>Nessun risultato</strong> con i filtri attuali. Modifica i criteri o usa
+          <strong>Reimposta</strong> nel pannello Filtri per tornare al catalogo completo.
+        </p>
+      }
+      <app-cards [cards]="cardsData"></app-cards>
+    </div>
+  }
+</div>

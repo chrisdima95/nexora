@@ -1,0 +1,129 @@
+<section class="account-page">
+  <div class="account-card">
+    <div class="account-header">
+      <div class="account-header__title">
+        <h1>Il tuo account</h1>
+        <p>Gestisci i tuoi dati e consulta gli ordini effettuati.</p>
+      </div>
+      <button type="button" class="logout-btn" (click)="logout()" routerLink="/home">Logout</button>
+    </div>
+
+    @if(user) {
+      <div class="user-section">
+        <h2>I tuoi dati</h2>
+        <div class="user-details-card">
+          <div class="user-detail-row">
+            <span class="user-detail-label">Nome</span>
+            <span class="user-detail-value">{{ user.first_name || '-' }}</span>
+          </div>
+          <div class="user-detail-row">
+            <span class="user-detail-label">Cognome</span>
+            <span class="user-detail-value">{{ user.last_name || '-' }}</span>
+          </div>
+          <div class="user-detail-row">
+            <span class="user-detail-label">Email</span>
+            <span class="user-detail-value user-detail-value--wrap">{{ user.email || '-' }}</span>
+          </div>
+          @if(user.profile?.address) {
+            <div class="user-detail-row">
+              <span class="user-detail-label">Indirizzo</span>
+              <span class="user-detail-value user-detail-value--wrap">{{ user.profile?.address }}</span>
+            </div>
+          }
+          @if(user.profile?.birth_date) {
+            <div class="user-detail-row">
+              <span class="user-detail-label">Data di nascita</span>
+              <span class="user-detail-value">{{ user.profile?.birth_date }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="orders-section">
+      <h2>I miei ordini</h2>
+
+      @if(isLoadingOrders) {
+        <div class="orders-state-card">
+          <p>Caricamento ordini...</p>
+        </div>
+      } @else if(ordersError) {
+        <div class="orders-state-card orders-error">
+          <p class="error">{{ ordersError }}</p>
+          <div class="orders-error__actions">
+            <button type="button" class="retry-btn" (click)="retryLoadOrders()">Riprova</button>
+            <a routerLink="/home" class="secondary-btn">Torna al catalogo</a>
+          </div>
+        </div>
+      } @else if(orders.length === 0) {
+        <div class="orders-state-card orders-empty">
+          <p class="orders-empty__title">Non hai ancora effettuato ordini.</p>
+          <p class="orders-empty__text">Quando completerai un acquisto, lo troverai in questa sezione.</p>
+          <a routerLink="/home" class="orders-empty__button">Esplora il catalogo</a>
+        </div>
+      } @else {
+        <div class="orders-list">
+          @for(order of orders; track order.id) {
+            <article class="order-card">
+              <div class="order-header">
+                <div class="order-title-wrap">
+                  <h3 class="order-title">Ordine n. {{ order.order_number }}</h3>
+                </div>
+                <span [class]="orderStatusClass(order.status)">
+                  {{ mapOrderStatus(order.status) }}
+                </span>
+              </div>
+
+              <div class="order-main">
+                <div class="order-main__row">
+                  <span class="order-main__label">Data</span>
+                  <span class="order-main__value">{{ formatDate(order.created_at) }}</span>
+                </div>
+                <div class="order-main__row">
+                  <span class="order-main__label">Totale</span>
+                  <span class="order-main__value">{{ formatCurrency(order.total_amount) }}</span>
+                </div>
+                <div class="order-main__row">
+                  <span class="order-main__label">Articoli</span>
+                  <span class="order-main__value">{{ totalItems(order) }}</span>
+                </div>
+              </div>
+
+              @if(order.items.length) {
+                <details class="order-details">
+                  <summary class="order-details__summary">
+                    <span class="order-details__label order-details__label--closed">Mostra dettagli ordine</span>
+                    <span class="order-details__label order-details__label--open">Nascondi dettagli</span>
+                  </summary>
+                  <ul class="order-items-list">
+                    @for(item of order.items; track item.id) {
+                      <li class="order-item">
+                        @if(item.product_image_url) {
+                          <img
+                            class="order-item__image"
+                            [src]="item.product_image_url"
+                            [alt]="item.product_name"
+                            loading="lazy"
+                          />
+                        }
+                        <div class="order-item__content">
+                          <p class="order-item__name">{{ item.product_name }}</p>
+                          <p class="order-item__meta">Quantità: {{ item.quantity }}</p>
+                          <p class="order-item__meta">Prezzo unitario: {{ formatCurrency(item.unit_price) }}</p>
+                        </div>
+                        <p class="order-item__subtotal">
+                          <span class="order-item__subtotal-label">Subtotale</span>
+                          <span>{{ itemSubtotal(item) }}</span>
+                        </p>
+                      </li>
+                    }
+                  </ul>
+                </details>
+              }
+            </article>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

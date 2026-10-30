@@ -1,0 +1,196 @@
+:host {
+  display: block;
+}
+
+.product-accordion {
+  background: var(--color-white);
+  border-radius: var(--nexora-radius-card, 14px);
+  border: var(--nexora-border-subtle, 1px solid rgba(15, 23, 42, 0.078));
+  box-shadow: var(--nexora-shadow-card);
+  overflow: hidden;
+}
+
+.product-accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  margin: 0;
+  box-sizing: border-box;
+  background: var(--color-white);
+  border: none;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.98);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: var(--color-text-strong);
+  transition: background-color 0.18s ease;
+}
+
+.product-accordion-header:hover {
+  background: var(--color-accent-subtle);
+}
+
+.product-accordion-header:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.product-accordion-title {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.product-accordion-chevron {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  margin-top: 2px;
+  margin-right: 4px;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.22s ease;
+}
+
+.product-accordion.is-open .product-accordion-chevron {
+  transform: rotate(-135deg);
+  margin-top: 6px;
+}
+
+.product-accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.22s ease;
+  /* Evita che la riga `1fr` si espanda oltre il contenuto (box bianco enorme sotto il testo). */
+  align-items: start;
+  /* Necessario per il collasso 0fr: evita overflow dipinto fuori traccia e scrollport anomali. */
+  min-height: 0;
+  overflow: hidden;
+}
+
+.product-accordion-panel.is-open {
+  /* `auto` = altezza del contenuto; `1fr` con altezza esterna indefinita può lasciare vuoto sotto. */
+  grid-template-rows: auto;
+}
+
+.product-accordion-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.product-accordion-body {
+  padding: 1.15rem 1.25rem 1.35rem;
+}
+
+/* Contenuto proiettato: ::ng-deep per tipografia coerente con la pagina prodotto */
+.product-accordion-body ::ng-deep p {
+  margin: 0 0 0.85rem;
+  line-height: 1.65;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  color: var(--color-text-muted);
+}
+
+.product-accordion-body ::ng-deep p:last-child {
+  margin-bottom: 0;
+}
+
+.product-accordion-body ::ng-deep .spec-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-accordion-body ::ng-deep .spec-list li {
+  position: relative;
+  padding-left: 1.15rem;
+  margin-bottom: 0.65rem;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+  color: var(--color-text-strong);
+}
+
+.product-accordion-body ::ng-deep .spec-list li:last-child {
+  margin-bottom: 0;
+}
+
+.product-accordion-body ::ng-deep .spec-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+}
+
+/* Variante flat: integrata nel fondo pagina (product detail), senza card bianca. */
+.product-accordion.product-accordion--flat {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  /* Come la variante card: `visible` rompe il collasso 0fr (testo che resta sopra la sezione sotto). */
+  overflow: hidden;
+}
+
+.product-accordion.product-accordion--flat .product-accordion-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 0.65rem 0 0.95rem;
+}
+
+.product-accordion.product-accordion--flat .product-accordion-header:hover {
+  background: rgba(15, 23, 42, 0.025);
+}
+
+.product-accordion.product-accordion--flat.is-open .product-accordion-header {
+  border-bottom-color: rgba(15, 23, 42, 0.07);
+}
+
+.product-accordion.product-accordion--flat .product-accordion-body {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-accordion-header,
+  .product-accordion-chevron,
+  .product-accordion-panel {
+    transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-accordion {
+    border-radius: var(--nexora-radius-card, 14px);
+  }
+
+  .product-accordion-header {
+    padding: 1rem 1.1rem;
+  }
+
+  .product-accordion-title {
+    font-size: 1.05rem;
+  }
+
+  .product-accordion-body {
+    padding: 1rem 1.1rem 1.15rem;
+  }
+
+  .product-accordion.product-accordion--flat .product-accordion-header {
+    padding: 0.55rem 0 0.85rem;
+  }
+
+  .product-accordion.product-accordion--flat .product-accordion-body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

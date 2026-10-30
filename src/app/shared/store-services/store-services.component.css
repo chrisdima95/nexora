@@ -1,0 +1,180 @@
+:host {
+  display: block;
+}
+
+.store-services {
+  box-sizing: border-box;
+  width: 100%;
+  /* Fascia “leggera” dopo marchi: stesso family di toni ma più aria visiva */
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.85) 0%, var(--color-white) 62%);
+  border-top: 1px solid var(--home-divider, var(--color-surface));
+  padding: calc(var(--home-section-pt, 2.25rem) + 0.2rem) 0 var(--home-section-pb, 0.5rem);
+}
+
+.store-services__inner {
+  box-sizing: border-box;
+  max-width: var(--home-max-width, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--home-gutter, 1.5rem) var(--home-inner-pb, 1.5rem);
+}
+
+.store-services__header {
+  margin: 0 0 var(--home-header-mb, 1.25rem);
+  max-width: 46rem;
+}
+
+.store-services__title {
+  margin: 0 0 0.45rem;
+  font-size: clamp(1.22rem, 2.25vw, 1.48rem);
+  font-weight: 800;
+  color: var(--color-text-strong);
+  letter-spacing: -0.02em;
+  line-height: 1.22;
+}
+
+.store-services__subtitle {
+  margin: 0;
+  font-size: var(--home-subtitle-size, 0.92rem);
+  line-height: var(--home-subtitle-lh, 1.55);
+  color: var(--home-subtitle-color, var(--color-text-muted));
+  font-weight: 400;
+}
+
+.store-services__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.store-services__cell {
+  margin: 0;
+  min-width: 0;
+}
+
+.store-services__card {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 1.15rem 1.25rem 1.2rem;
+  border-radius: var(--nexora-radius-card, 14px);
+  border: var(--nexora-border-subtle, 1px solid rgba(15, 23, 42, 0.078));
+  background: var(--color-white);
+  box-shadow: var(--nexora-shadow-card);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.store-services__card:hover {
+  border-color: rgba(29, 78, 216, 0.14);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.72) inset,
+    0 2px 8px rgba(15, 23, 42, 0.05),
+    0 14px 34px rgba(15, 23, 42, 0.1),
+    0 0 0 1px rgba(34, 211, 238, 0.12);
+  transform: translateY(-2px);
+}
+
+.store-services__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--nexora-radius-control, 10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-strong);
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.98);
+}
+
+.store-services__icon svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.store-services__card-title {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--color-text-strong);
+}
+
+.store-services__card-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 1024px) {
+  .store-services__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .store-services {
+    padding: calc(var(--home-section-pt-md, 1.5rem) + 0.15rem) 0 0.25rem;
+  }
+
+  .store-services__inner {
+    padding: 0 var(--home-gutter-md, 1rem) var(--home-inner-pb-md, 1.25rem);
+  }
+
+  .store-services__header {
+    margin-bottom: var(--home-header-mb-md, 1rem);
+  }
+
+  .store-services__grid {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .store-services__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .store-services__inner {
+    padding: 0 var(--home-gutter-sm, 0.75rem) var(--home-inner-pb-sm, 1rem);
+  }
+
+  .store-services__subtitle {
+    font-size: var(--home-subtitle-size-sm, 0.88rem);
+  }
+
+  .store-services__card {
+    padding: 1rem 1.1rem 1.1rem;
+  }
+
+  .store-services__card-title {
+    font-size: 0.95rem;
+  }
+
+  .store-services__card-text {
+    font-size: 0.8125rem;
+    line-height: 1.48;
+  }
+}
+
+@media (max-width: 360px) {
+  .store-services__grid {
+    gap: 0.65rem;
+  }
+
+  .store-services__card {
+    padding: 0.95rem 1rem 1rem;
+  }
+
+  .store-services__icon {
+    width: 2.35rem;
+    height: 2.35rem;
+    margin-bottom: 0.65rem;
+  }
+}

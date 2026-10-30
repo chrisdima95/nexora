@@ -1,0 +1,4 @@
+/* Custom elements default to display:inline; block evita anonimi / IFC che rompono sticky nei layout griglia categoria. */
+:host {
+  display: block;
+}

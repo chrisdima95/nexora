@@ -1,0 +1,118 @@
+.search-results-page {
+  max-width: var(--nexora-max-width, 1200px);
+  margin: 0 auto;
+  padding: var(--nexora-page-pt, 2.25rem) var(--nexora-gutter-x, 1.5rem) var(--nexora-page-pb, 3rem);
+  box-sizing: border-box;
+}
+
+.search-results-header {
+  color: var(--color-text-strong);
+  margin-bottom: 22px;
+}
+
+.search-results-label {
+  margin: 0 0 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.search-results-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-text-strong);
+}
+
+.search-results-query {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.search-results-query__sep {
+  margin: 0 0.35rem;
+  opacity: 0.85;
+}
+
+.search-results-count {
+  color: var(--color-text-strong);
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+
+.search-sort-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 1rem;
+}
+
+.search-sort-label {
+  font-size: 0.86rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.search-sort-select {
+  min-height: 2.1rem;
+  border-radius: var(--nexora-radius-control, 10px);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: var(--color-white);
+  color: var(--color-text-strong);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.88rem;
+}
+
+.search-state-card {
+  background: var(--color-white);
+  color: var(--color-text-strong);
+  border-radius: var(--nexora-radius-card, 14px);
+  padding: 1.35rem 1.25rem;
+  border: var(--nexora-border-subtle, 1px solid rgba(15, 23, 42, 0.078));
+  box-shadow: var(--nexora-shadow-card);
+}
+
+.search-state-card p {
+  margin: 0 0 0.65rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.search-state-card__hint {
+  margin-bottom: 1rem !important;
+}
+
+.search-state-card a,
+.search-state-card__cta {
+  color: var(--color-secondary);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.search-state-card a:hover,
+.search-state-card__cta:hover {
+  text-decoration: underline;
+}
+
+.search-state-card a:focus-visible,
+.search-state-card__cta:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .search-results-page {
+    padding: 1.5rem var(--nexora-gutter-x, 1rem) 2.5rem;
+  }
+
+  .search-sort-bar {
+    justify-content: space-between;
+  }
+}

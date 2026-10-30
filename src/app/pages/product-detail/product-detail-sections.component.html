@@ -1,0 +1,48 @@
+<div class="product-content-grid product-content-grid--editorial-lower">
+  <div class="content-column content-column-desc" role="region" aria-label="Descrizione prodotto">
+    <app-product-accordion-section
+      accordionId="product-desc"
+      title="Descrizione prodotto"
+      appearance="flat"
+      [initiallyOpen]="true"
+    >
+      @if(descriptionParagraphs().length > 0) {
+        <div class="description-body">
+          @for(paragraph of descriptionParagraphs(); track $index) {
+            <p>{{ paragraph }}</p>
+          }
+        </div>
+      } @else {
+        <p class="empty-hint">Descrizione non disponibile.</p>
+      }
+    </app-product-accordion-section>
+  </div>
+
+  <div class="content-column content-column-specs" role="region" aria-label="Dati tecnici">
+    <app-product-accordion-section
+      accordionId="product-specs"
+      title="Dati tecnici"
+      appearance="flat"
+      [initiallyOpen]="true"
+    >
+      @if(technicalSpecRows().length > 0) {
+        <div class="spec-sheet">
+          @for(row of technicalSpecRows(); track $index) {
+            @if(row.kind === 'kv') {
+              <div class="spec-sheet-row spec-sheet-row-kv">
+                <span class="spec-key">{{ row.key }}</span>
+                <span class="spec-value">{{ row.value }}</span>
+              </div>
+            } @else {
+              <div class="spec-sheet-row spec-sheet-row-line">
+                <span class="spec-line">{{ row.text }}</span>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <p class="empty-hint">Dati tecnici non ancora disponibili.</p>
+      }
+    </app-product-accordion-section>
+  </div>
+</div>

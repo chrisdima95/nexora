@@ -1,0 +1,25 @@
+<section class="promo-strip" aria-labelledby="promo-strip-heading">
+  <div class="promo-strip__inner">
+    <div class="promo-strip__accent" aria-hidden="true">
+      <svg class="promo-strip__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M4 8.5c0-1.1.9-2 2-2h2.5l1-2H15l1 2H18c1.1 0 2 .9 2 2v9c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2v-9z"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M9.5 11.5h5M9.5 14.5h3"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+    </div>
+    <div class="promo-strip__copy">
+      <h2 id="promo-strip-heading" class="promo-strip__title">{{ headline }}</h2>
+      <p class="promo-strip__subtitle">{{ subline }}</p>
+    </div>
+    <a [routerLink]="ctaLink" class="promo-strip__cta" [attr.aria-label]="ctaLabel + ' — ' + headline">{{ ctaLabel }}</a>
+  </div>
+</section>

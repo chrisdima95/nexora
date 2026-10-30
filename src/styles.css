@@ -1,0 +1,183 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Palette brand Nexora (token globali) */
+:root {
+  --color-primary: #0f172a;
+  --color-secondary: #1d4ed8;
+  --color-accent: #22d3ee;
+  --color-bg-light: #f8fafc;
+  --color-surface: #e2e8f0;
+  --color-text-strong: #111827;
+  --color-text-muted: #475569;
+  --color-on-primary: #ffffff;
+  --color-white: #ffffff;
+  /* stati interattivi derivati dal blu brand */
+  --color-secondary-hover: #163bbe;
+  --color-secondary-active: #152d9a;
+  /* Accent: tinte leggere per hover/fondi (evitare grandi superfici piene) */
+  --color-accent-subtle: rgba(34, 211, 238, 0.1);
+  --color-accent-soft: rgba(34, 211, 238, 0.16);
+  --color-accent-ring: rgba(34, 211, 238, 0.45);
+  --font-family: 'Inter', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /* Ritmo layout / superfici (pagine interne, allineati alla home — non sostituiscono la palette brand) */
+  --nexora-max-width: 1200px;
+  --nexora-gutter-x: clamp(1rem, 3vw, 1.5rem);
+  /**
+   * Layout a due colonne (sidebar catalogo + griglia prodotti), stessi valori di category-catalog-layout.css.
+   */
+  --nexora-category-catalog-split-gap: clamp(1rem, 2.5vw, 1.5rem);
+  --nexora-category-sidebar-track-max: 248px;
+  --nexora-page-pt: 2.25rem;
+  --nexora-page-pb: 3rem;
+  --nexora-radius-card: 14px;
+  --nexora-radius-control: 10px;
+  --nx-btn-radius: 999px;
+  --nx-btn-min-height: 48px;
+  --nx-btn-padding-x: 24px;
+  --nx-btn-font-weight: 700;
+  --nx-btn-transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.18s ease;
+  --nexora-border-subtle: 1px solid rgba(15, 23, 42, 0.078);
+  --nexora-shadow-card:
+    0 1px 0 rgba(255, 255, 255, 0.65) inset,
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 6px 18px rgba(15, 23, 42, 0.06);
+  /**
+   * Altezza “logica” della navbar fixed + offset per main e sticky sidebar catalogo.
+   * Desktop catalogo ~110–120px; mobile navbar a più righe richiede più spazio.
+   */
+  --nexora-navbar-layout-offset: 7.5rem;
+}
+
+/* font-display: swap è già configurato nell'URL di Google Fonts */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+* {
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+ * overflow-x: hidden su html/body fa computare overflow-y: auto (regola di pairing CSS): lo
+ * scroll verticale avviene sullo scrollport di html/body e position:sticky non si ancora al
+ * viewport come previsto (sidebar catalogo “scorre via”). overflow-x: clip clippa l’asse X
+ * senza forzare overflow-y: auto, quindi lo scroll resta sul documento e sticky funziona.
+ */
+html,
+body {
+  overflow-x: clip !important;
+  max-width: 100vw;
+  width: 100%;
+}
+
+app-root,
+app-navbar,
+app-footer,
+.main-content,
+router-outlet,
+router-outlet + * {
+  max-width: 100vw;
+  width: 100%;
+}
+
+html,
+body {
+  font-family: var(--font-family);
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-strong);
+}
+
+app-root {
+  display: block;
+}
+
+app-root > *:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+app-navbar {
+  display: block;
+  position: relative;
+}
+
+/* Spazio sotto la navbar fixed (il wrapper fixed non occupa altezza nel flusso) */
+.main-content {
+  padding-top: var(--nexora-navbar-layout-offset);
+}
+
+/*
+ * Home: l’offset globale è volutamente generoso per catalogo (sticky filtri + respiro).
+ * L’hero è full-bleed su fondo scuro: l’eccesso sopra l’altezza reale della navbar crea una fascia chiara.
+ * Allineiamo il padding del main all’altezza delle due file della navbar (valori in sync con navbar.component.css).
+ * Sotto 769px la navbar è a più righe variabili: resta l’offset token (9rem) definito nel media query mobile.
+ */
+@media (min-width: 1025px) {
+  .main-content:has(app-home) {
+    padding-top: calc(65px + 44px);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content:has(app-home) {
+    padding-top: calc(65px + 45px);
+  }
+}
+
+/* Checkout: navbar compatta */
+body:has(app-navbar .checkout-navbar) {
+  --nexora-navbar-layout-offset: 49px;
+}
+
+/* Navbar mobile: fila superiore a wrap + search full width — serve più offset */
+@media (max-width: 768px) {
+  :root {
+    --nexora-navbar-layout-offset: 9rem;
+  }
+
+  body:has(app-navbar .checkout-navbar) {
+    --nexora-navbar-layout-offset: 49px;
+  }
+}
+
+router-outlet {
+  display: block;
+}
+
+/* Testo visibile solo agli screen reader — label per campi con placeholder visibile */
+.nexora-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

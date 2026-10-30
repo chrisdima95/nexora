@@ -1,0 +1,123 @@
+<div class="cards-container" [class.cards-container--category]="mode === 'category'">
+  @for(card of cards; track card.id || card.title){
+    <div class="card" [class.card--category]="mode === 'category'">
+      <div class="card-body">
+        <a class="card-main-link" [routerLink]="card.link">
+          <div class="card-media">
+            <img
+              class="card-media__img"
+              [src]="card.imgSrc"
+              [alt]="mode === 'category' ? (card.imgAlt || card.title) : ''"
+              [width]="card.imgWidth || 400"
+              [height]="card.imgHeight || 240"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
+          </div>
+          <h3 class="card-title">{{ card.title }}</h3>
+        </a>
+        @if(card.keyHighlights?.length){
+          <ul class="card-key-highlights" aria-label="Caratteristiche principali">
+            @for (line of card.keyHighlights; track $index) {
+              <li>{{ line }}</li>
+            }
+          </ul>
+        }
+        @if(card.description){
+          <p class="card-excerpt">{{ card.description }}</p>
+        }
+      </div>
+      <div class="card-footer">
+        @if(card.price || card.originalPrice){
+          <div class="card-price-container">
+            @if(card.originalPrice && card.price){
+              <span class="card-original-price">{{ card.originalPrice }}</span>
+              @if (card.discountPercentage != null && card.discountPercentage > 0) {
+                <span class="card-discount-badge">-{{ card.discountPercentage }}%</span>
+              }
+              <p class="card-price">{{ card.price }}</p>
+            } @else {
+              <p class="card-price">{{ card.price || card.originalPrice }}</p>
+            }
+          </div>
+        }
+        @if(getAvailabilityLabel(card); as label) {
+          <span
+            class="availability-badge"
+            [class.availability-badge--in]="card.availabilityStatus === 'in_stock'"
+            [class.availability-badge--low]="card.availabilityStatus === 'low_stock'"
+            [class.availability-badge--out]="card.availabilityStatus === 'out_of_stock'"
+          >
+            {{ label }}
+          </span>
+        }
+        <div class="card-actions">
+          @if(card.buttonText){
+            <app-button [buttonText]="card.buttonText" [routerLink]="card.link" appearance="solid"></app-button>
+          }
+          @if(card.detailsLinkText){
+            <app-button [buttonText]="card.detailsLinkText" [routerLink]="card.link" appearance="soft"></app-button>
+          }
+          @if(card.price || card.originalPrice){
+            <button
+              type="button"
+              class="add-to-cart-btn"
+              (click)="addToCart(card)"
+              [disabled]="!canAdd(card)"
+            >
+              {{ canAdd(card) ? 'Aggiungi al carrello' : 'Non disponibile' }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Modale prodotto aggiunto -->
+@if(showModal && lastAddedProduct) {
+  <div class="modal-overlay" (click)="closeModal()" role="presentation">
+    <div
+      class="modal-content"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="add-to-cart-dialog-title"
+    >
+      <button type="button" class="modal-close" (click)="closeModal()" aria-label="Chiudi finestra">×</button>
+      
+      <div class="modal-header">
+        <svg class="check-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+          <path d="M20 6L9 17l-5-5"></path>
+        </svg>
+        <h2 id="add-to-cart-dialog-title">Il prodotto è stato aggiunto al carrello</h2>
+      </div>
+
+      <div class="modal-product">
+        <img [src]="lastAddedProduct.imgSrc" [alt]="lastAddedProduct.title" class="modal-product-image" width="200" height="200" loading="lazy" decoding="async" />
+        <div class="modal-product-info">
+          <h3>{{ lastAddedProduct.title }}</h3>
+          @if(lastAddedProduct.originalPrice && lastAddedProduct.price) {
+            <div class="modal-product-price">
+              <span class="modal-original-price">{{ lastAddedProduct.originalPrice }}</span>
+              <span class="modal-price">{{ lastAddedProduct.price }}</span>
+            </div>
+          } @else {
+            <p class="modal-price">{{ lastAddedProduct.price || lastAddedProduct.originalPrice }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-continue-btn" (click)="continueShopping()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+          Continua lo shopping
+        </button>
+        <button type="button" class="modal-cart-btn-bottom" (click)="goToCart()">Vai al carrello</button>
+      </div>
+    </div>
+  </div>
+}

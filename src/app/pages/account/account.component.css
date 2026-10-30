@@ -1,0 +1,407 @@
+.account-page {
+  max-width: 980px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.account-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  padding: 1.75rem;
+  display: grid;
+  gap: 1.75rem;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eef1f5;
+}
+
+.account-header__title {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.account-header h1 {
+  margin: 0;
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+.account-header__title p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.user-section,
+.orders-section {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.orders-section h2,
+.user-section h2 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.logout-btn,
+.orders-empty__button,
+.retry-btn,
+.secondary-btn {
+  border: 0;
+  border-radius: var(--nx-btn-radius, 999px);
+  min-height: 42px;
+  padding: 0.55rem 1.1rem;
+  background: #0f172a;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.secondary-btn {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+}
+
+.user-details-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #f8fafc;
+  padding: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.user-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.user-detail-label {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.user-detail-value {
+  color: #0f172a;
+  text-align: right;
+}
+
+.user-detail-value--wrap {
+  overflow-wrap: anywhere;
+}
+
+.orders-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.orders-state-card p {
+  margin: 0;
+}
+
+.orders-empty__title {
+  color: #111827;
+  font-weight: 600;
+}
+
+.orders-empty__text {
+  color: #6b7280;
+  line-height: 1.45;
+}
+
+.orders-empty__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  margin-top: 0.25rem;
+}
+
+.logout-btn:hover,
+.orders-empty__button:hover,
+.retry-btn:hover {
+  background: #1e293b;
+}
+
+.secondary-btn:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.orders-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.order-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.order-title-wrap {
+  min-width: 0;
+}
+
+.order-title {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+  overflow-wrap: anywhere;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.status-badge--confirmed {
+  border-color: #a7f3d0;
+  color: #047857;
+  background: #ecfdf5;
+}
+
+.status-badge--pending {
+  border-color: #fde68a;
+  color: #92400e;
+  background: #fffbeb;
+}
+
+.status-badge--cancelled {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.order-main {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.order-main__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.order-main__label {
+  color: #64748b;
+}
+
+.order-main__value {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.order-details {
+  border-top: 1px solid #eef1f5;
+  padding-top: 0.85rem;
+}
+
+.order-details__summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #1e293b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.order-details__summary:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.order-details__summary:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.order-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+.order-details__label--open {
+  display: none;
+}
+
+.order-details[open] .order-details__label--closed {
+  display: none;
+}
+
+.order-details[open] .order-details__label--open {
+  display: inline;
+}
+
+.order-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.8rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.order-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+  padding: 0.7rem;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.order-item__image {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.order-item__content {
+  min-width: 0;
+}
+
+.order-item__name,
+.order-item__meta,
+.order-item__subtotal {
+  margin: 0;
+}
+
+.order-item__name {
+  color: #0f172a;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.order-item__meta {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.order-item__subtotal {
+  color: #0f172a;
+  font-weight: 700;
+  text-align: right;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.order-item__subtotal-label {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.error {
+  color: #b42318;
+}
+
+.orders-error {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.orders-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+@media (max-width: 640px) {
+  .account-page {
+    margin: 1rem auto 1.5rem;
+  }
+
+  .account-card {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .account-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .logout-btn {
+    width: 100%;
+  }
+
+  .user-detail-row,
+  .order-main__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .user-detail-value {
+    text-align: left;
+  }
+
+  .order-item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .order-item__image {
+    width: 72px;
+    height: 72px;
+  }
+
+  .order-item__subtotal {
+    text-align: left;
+  }
+}

@@ -1,0 +1,100 @@
+# Build and cache outputs
+/dist/
+/tmp/
+/out-tsc/
+/bazel-out/
+/.angular/
+
+# Node
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+
+# Visual Studio Code (keep shared project tasks/launch presets)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Test / coverage
+/coverage/
+/.nyc_output/
+*.lcov
+htmlcov/
+.coverage
+.coverage.*
+
+# Logs and local diagnostics
+*.log
+testem.log
+scripts/probe-out*.json
+
+# Frontend misc
+.sass-cache/
+/connect.lock
+/libpeerconnection.log
+/typings/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+backend/.venv/
+
+# Django local runtime
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# OS / tooling swap files
+*.swp
+*.swo
+
+
+# Database SQLite locali
+*.sqlite3
+
+# Chiavi e certificati privati
+*.pem
+*.key
+
+# File Django generati localmente
+backend/media/
+backend/staticfiles/
+
+# Collegamenti Windows
+*.lnk

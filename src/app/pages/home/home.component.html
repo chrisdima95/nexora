@@ -1,0 +1,152 @@
+<h1 class="home-page-heading">Nexora — catalogo prodotti (demo e-commerce)</h1>
+<app-carousel class="home-hero"></app-carousel>
+
+<app-promo-strip class="home-promo"></app-promo-strip>
+
+<div class="home-main">
+  <section id="home-categories" class="home-categories" aria-labelledby="home-categories-heading">
+    <div class="home-categories__inner">
+      <header class="home-categories__header">
+        <h2 id="home-categories-heading" class="home-categories__title">Categorie principali</h2>
+        <p class="home-categories__subtitle">
+          Scegli il reparto e apri il catalogo: TV, elettrodomestici o telefonia.
+        </p>
+      </header>
+      <app-cards [cards]="categoryCards" mode="category"></app-cards>
+    </div>
+  </section>
+
+  <section class="home-featured" aria-labelledby="home-featured-heading">
+    <div class="home-featured__inner">
+      <header class="home-featured__header">
+        <h2 id="home-featured-heading" class="home-featured__title">In evidenza</h2>
+        <p class="home-featured__subtitle">
+          Alcuni articoli in primo piano, aggiornati insieme al catalogo.
+        </p>
+      </header>
+
+      @if (featuredLoading) {
+        <div class="home-featured__state home-dynamic-state home-dynamic-state--loading" role="status">
+          <span class="home-dynamic-state__sr-only">Caricamento prodotti in evidenza</span>
+          <div class="home-dynamic-state__skeleton-grid" aria-hidden="true">
+            @for (_ of homeProductSkeletonSlots; track $index) {
+              <div class="home-dynamic-state__skeleton-card"></div>
+            }
+          </div>
+        </div>
+      } @else if (featuredError) {
+        <div class="home-featured__state home-dynamic-state home-dynamic-state--error" role="alert">
+          <p class="home-dynamic-state__lead">{{ featuredErrorMessage }}</p>
+          <a routerLink="/home" fragment="home-categories" class="home-featured__link">Sfoglia le categorie</a>
+        </div>
+      } @else if (featuredCards.length === 0) {
+        <div class="home-featured__state home-dynamic-state home-dynamic-state--empty" role="status">
+          <p class="home-dynamic-state__lead">Nessun prodotto disponibile in questa sezione.</p>
+          <p class="home-featured__hint home-dynamic-state__hint">Sfoglia i reparti per continuare.</p>
+          <nav class="home-featured__nav" aria-label="Categorie principali">
+            <a routerLink="/telefoni" class="home-featured__pill">Telefoni</a>
+            <a routerLink="/tv" class="home-featured__pill">TV</a>
+            <a routerLink="/elettrodomestici" class="home-featured__pill">Elettrodomestici</a>
+            <a routerLink="/offerte" class="home-featured__pill">Offerte</a>
+          </nav>
+        </div>
+      } @else {
+        <div class="home-featured__cards">
+          <app-cards [cards]="featuredCards"></app-cards>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="home-offers" aria-labelledby="home-offers-heading">
+    <div class="home-offers__inner">
+      <header class="home-offers__header">
+        <h2 id="home-offers-heading" class="home-offers__title">Offerte del momento</h2>
+        <p class="home-offers__subtitle">
+          Anteprima di articoli in promozione; l’elenco completo è nella pagina Offerte.
+        </p>
+      </header>
+
+      @if (offersLoading) {
+        <div class="home-offers__state home-dynamic-state home-dynamic-state--loading" role="status">
+          <span class="home-dynamic-state__sr-only">Caricamento offerte del momento</span>
+          <div class="home-dynamic-state__skeleton-grid" aria-hidden="true">
+            @for (_ of homeProductSkeletonSlots; track $index) {
+              <div class="home-dynamic-state__skeleton-card"></div>
+            }
+          </div>
+        </div>
+      } @else if (offersError) {
+        <div class="home-offers__state home-dynamic-state home-dynamic-state--error" role="alert">
+          <p class="home-dynamic-state__lead">{{ offersErrorMessage }}</p>
+          <a routerLink="/offerte" class="home-offers__link">Vai alle offerte</a>
+        </div>
+      } @else if (offersCards.length === 0) {
+        <div class="home-offers__state home-dynamic-state home-dynamic-state--empty" role="status">
+          <p class="home-dynamic-state__lead">Nessun prodotto disponibile in questa sezione.</p>
+          <p class="home-dynamic-state__hint home-offers__empty-hint">
+            Su Offerte trovi tutte le promozioni del catalogo, incluse quelle già presenti in «In evidenza».
+          </p>
+          <p class="home-offers__footer home-offers__footer--empty">
+            <a routerLink="/offerte" class="home-offers__cta">Tutte le offerte</a>
+          </p>
+        </div>
+      } @else {
+        <div class="home-offers__cards">
+          <app-cards [cards]="offersCards"></app-cards>
+        </div>
+        <p class="home-offers__footer">
+          <a routerLink="/offerte" class="home-offers__cta">Tutte le offerte</a>
+        </p>
+      }
+    </div>
+  </section>
+
+  <app-popular-brands class="home-brands"></app-popular-brands>
+
+  <app-store-services class="home-store-services"></app-store-services>
+
+  <section class="home-new" aria-labelledby="home-new-heading">
+    <div class="home-new__inner">
+      <header class="home-new__header">
+        <div class="home-new__title-row">
+          <h2 id="home-new-heading" class="home-new__title">Novità</h2>
+          <span class="home-new__badge" aria-hidden="true">Ultimi inseriti</span>
+        </div>
+        <p class="home-new__subtitle">
+          Le ultime aggiunte da sfogliare nel catalogo.
+        </p>
+      </header>
+
+      @if (newArrivalsLoading) {
+        <div class="home-new__state home-dynamic-state home-dynamic-state--loading" role="status">
+          <span class="home-dynamic-state__sr-only">Caricamento novità e ultimi inseriti</span>
+          <div class="home-dynamic-state__skeleton-grid" aria-hidden="true">
+            @for (_ of homeProductSkeletonSlots; track $index) {
+              <div class="home-dynamic-state__skeleton-card"></div>
+            }
+          </div>
+        </div>
+      } @else if (newArrivalsError) {
+        <div class="home-new__state home-dynamic-state home-dynamic-state--error" role="alert">
+          <p class="home-dynamic-state__lead">{{ newArrivalsErrorMessage }}</p>
+          <a routerLink="/home" fragment="home-categories" class="home-new__link">Sfoglia le categorie</a>
+        </div>
+      } @else if (newArrivalsCards.length === 0) {
+        <div class="home-new__state home-dynamic-state home-dynamic-state--empty" role="status">
+          <p class="home-dynamic-state__lead">Nessun prodotto disponibile in questa sezione.</p>
+          <p class="home-new__hint home-dynamic-state__hint">Prova a esplorare il catalogo per reparto.</p>
+          <nav class="home-new__nav" aria-label="Categorie principali">
+            <a routerLink="/telefoni" class="home-new__pill">Telefoni</a>
+            <a routerLink="/tv" class="home-new__pill">TV</a>
+            <a routerLink="/elettrodomestici" class="home-new__pill">Elettrodomestici</a>
+          </nav>
+        </div>
+      } @else {
+        <div class="home-new__cards">
+          <app-cards [cards]="newArrivalsCards"></app-cards>
+        </div>
+      }
+    </div>
+  </section>
+</div>

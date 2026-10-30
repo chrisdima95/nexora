@@ -1,0 +1,222 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--color-bg-light);
+}
+
+.review-container {
+  max-width: var(--nexora-max-width, 1200px);
+  margin: 0 auto;
+  padding: 2rem var(--nexora-gutter-x, 1.5rem) 3rem;
+}
+
+.review-card {
+  background: var(--color-white);
+  border: var(--nexora-border-subtle, 1px solid rgba(15, 23, 42, 0.078));
+  border-radius: var(--nexora-radius-card, 14px);
+  box-shadow: var(--nexora-shadow-card);
+  padding: 1.75rem;
+}
+
+h1 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+}
+
+.section-title {
+  margin: 0 0 0.9rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--color-text-strong);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.account-note {
+  margin: 0.45rem 0 1.2rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.items-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.items-section {
+  margin-bottom: 1.35rem;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 12px;
+  padding: 0.85rem;
+}
+
+.item-image {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: rgba(248, 250, 252, 0.92);
+  padding: 0.4rem;
+}
+
+.item-content h3 {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+}
+
+.item-content p {
+  margin: 0.2rem 0;
+  color: var(--color-text-muted);
+}
+
+.item-subtotal {
+  font-weight: 700;
+  color: var(--color-text-strong);
+}
+
+.summary-section {
+  margin-top: 1rem;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+}
+
+.totals-box {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: var(--color-white);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  color: var(--color-text-muted);
+  font-size: 0.98rem;
+}
+
+.total-row strong {
+  color: var(--color-text-strong);
+  font-weight: 700;
+}
+
+.total-row-final {
+  margin: 0;
+  padding-top: 0.62rem;
+  border-top: 1px dashed rgba(15, 23, 42, 0.2);
+  font-size: 1.24rem;
+  color: var(--color-text-strong);
+}
+
+.total-row-final span {
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.96);
+}
+
+.total-row-final strong {
+  font-size: 1.34rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.95rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.btn-primary,
+.btn-secondary {
+  border-radius: var(--nx-btn-radius, 999px);
+  min-height: var(--nx-btn-min-height, 46px);
+  padding: 0.65rem var(--nx-btn-padding-x, 22px);
+  font-weight: var(--nx-btn-font-weight, 700);
+  font-size: 0.96rem;
+  line-height: 1;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--nx-btn-transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: var(--color-secondary);
+  color: var(--color-on-primary);
+  box-shadow: 0 2px 12px rgba(29, 78, 216, 0.24);
+  min-width: 11.5rem;
+}
+
+.btn-primary:hover {
+  background: var(--color-secondary-hover);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: var(--color-white);
+  color: var(--color-text-strong);
+  border-color: rgba(15, 23, 42, 0.15);
+}
+
+.btn-secondary:hover {
+  background: var(--color-accent-subtle);
+  border-color: rgba(15, 23, 42, 0.2);
+}
+
+.checkout-flow-note {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .review-card {
+    padding: 1.25rem;
+  }
+
+  .item-row {
+    grid-template-columns: 1fr;
+  }
+
+  .item-subtotal {
+    justify-self: start;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,129 @@
+<section class="product-detail-page">
+  @if(isLoading) {
+    <p class="product-state">Caricamento prodotto...</p>
+  } @else if(viewState === 'invalid-route') {
+    <div class="product-state" role="alert">
+      <p>ID prodotto non valido nella route. Controlla il link e riprova.</p>
+      <a routerLink="/home">Torna alla home</a>
+    </div>
+  } @else if(viewState === 'not-found') {
+    <div class="product-state" role="status">
+      <p>Prodotto non trovato. Potrebbe non essere piu disponibile nel catalogo.</p>
+      <a routerLink="/offerte">Vai alle offerte</a>
+    </div>
+  } @else if(viewState === 'payload-invalid') {
+    <div class="product-state" role="alert">
+      <p>I dettagli ricevuti per questo prodotto non sono validi.</p>
+      <a routerLink="/home">Torna alla home</a>
+    </div>
+  } @else if(viewState === 'error') {
+    <div class="product-state">
+      <p>{{ errorMessage }}</p>
+      <a routerLink="/home">Torna alla home</a>
+    </div>
+  } @else if(viewState === 'ready' && product) {
+    <nav class="product-breadcrumbs" aria-label="Breadcrumb prodotto">
+      <a routerLink="/home">Home</a>
+      <span>/</span>
+      <a [routerLink]="getCategoryLink(product.category)">{{ getCategoryLabel(product.category) }}</a>
+      <span>/</span>
+      <span>{{ product.name }}</span>
+    </nav>
+
+    <div class="product-detail-layout">
+      <div class="product-detail-media">
+        <div class="product-image-frame">
+          <div class="product-image-stage">
+            <img
+              [src]="selectedImage"
+              [alt]="product.name"
+              width="520"
+              height="520"
+              decoding="async"
+              fetchpriority="high"
+              (error)="onHeroImageError()"
+            />
+          </div>
+        </div>
+
+        @if(galleryImages.length > 1) {
+          <div class="product-thumbnails" aria-label="Galleria immagini prodotto">
+            @for(image of galleryImages; track image) {
+              <button
+                type="button"
+                class="thumbnail-button"
+                [class.active]="image === selectedImage"
+                (click)="selectImage(image)"
+                [attr.aria-label]="'Visualizza immagine di ' + product.name"
+              >
+                <img [src]="image" [alt]="product.name" width="104" height="104" decoding="async" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="product-detail-summary">
+        <header class="product-summary-header">
+          <h1 class="product-title">{{ product.name }}</h1>
+          @if(product.brand.trim()) {
+            <p class="product-brand">{{ product.brand }}</p>
+          }
+        </header>
+
+        <div class="purchase-card" aria-label="Acquisto e prezzo">
+          <div class="price-stack">
+            @if(isOnSale(product)) {
+              <div class="price-main-row">
+                <span class="price-current" aria-label="Prezzo attuale">{{ formatPrice(product.price) }}</span>
+                @if(product.discount_percentage != null && product.discount_percentage > 0) {
+                  <span class="discount-pill" aria-hidden="true">-{{ product.discount_percentage }}%</span>
+                }
+              </div>
+              <p class="price-compare" aria-label="Prezzo di listino">
+                <span class="price-compare-label">Invece di</span>
+                <span class="price-original">{{ formatPrice(product.original_price!) }}</span>
+              </p>
+            } @else {
+              <div class="price-main-row">
+                <span class="price-current" aria-label="Prezzo">{{ formatPrice(product.price) }}</span>
+              </div>
+            }
+            <p class="price-caption">Prezzo online</p>
+          </div>
+          <span
+            class="availability-badge"
+            [class.availability-badge--in]="product.availability_status === 'in_stock'"
+            [class.availability-badge--low]="product.availability_status === 'low_stock'"
+            [class.availability-badge--out]="product.availability_status === 'out_of_stock'"
+          >
+            {{ getAvailabilityLabel(product) }}
+          </span>
+
+          <button class="add-to-cart-btn" type="button" (click)="addToCart()" [disabled]="!canAddProductToCart(product)">
+            {{ canAddProductToCart(product) ? 'Aggiungi al carrello' : 'Non disponibile' }}
+          </button>
+        </div>
+
+        <footer class="product-summary-meta">
+          <div class="meta-badges">
+            <span class="category-badge">{{ getCategoryLabel(product.category) }}</span>
+            @if(product.is_featured) {
+              <span class="featured-badge">In evidenza</span>
+            }
+          </div>
+          <a class="back-link" [routerLink]="getCategoryLink(product.category)">{{
+            getCategoryReturnLinkText(product.category)
+          }}</a>
+        </footer>
+      </div>
+    </div>
+  }
+
+  @if(viewState === 'ready' && product) {
+    <app-product-detail-sections
+      [descriptionParagraphs]="getDescriptionParagraphs(product.description)"
+      [technicalSpecsLines]="getTechnicalSpecs(product.technical_specs)"
+    />
+  }
+</section>

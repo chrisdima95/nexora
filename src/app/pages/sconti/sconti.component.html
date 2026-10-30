@@ -1,0 +1,42 @@
+<div class="offers-page">
+  <header class="offers-header">
+    <h1 class="offers-title">Offerte della settimana</h1>
+    <p class="offers-intro">
+      Prezzi promozionali su una selezione di smartphone, TV ed elettrodomestici. Aggiungi al carrello o apri la scheda prodotto per i dettagli.
+    </p>
+  </header>
+
+  @if (loading) {
+    <p class="offers-state" role="status">Caricamento offerte…</p>
+  } @else if (loadError) {
+    <div class="offers-state offers-state--error" role="alert">
+      <p>{{ loadErrorMessage }}</p>
+      <a routerLink="/home" class="offers-link">Torna alla home</a>
+    </div>
+  } @else if (cardsData.length === 0) {
+    <div class="offers-state" role="status">
+      <p>Al momento non ci sono prodotti in promozione nel catalogo.</p>
+      <p class="offers-state__hint">Sfoglia le categorie:</p>
+      <nav class="offers-nav" aria-label="Categorie">
+        <a routerLink="/telefoni" class="offers-pill">Telefoni</a>
+        <a routerLink="/tv" class="offers-pill">TV</a>
+        <a routerLink="/elettrodomestici" class="offers-pill">Elettrodomestici</a>
+      </nav>
+    </div>
+  } @else {
+    <div class="offers-sort-bar">
+      <label class="offers-sort-label" for="offers-sort">Ordina per</label>
+      <select
+        id="offers-sort"
+        class="offers-sort-select"
+        [value]="selectedSort"
+        (change)="onSortChange($any($event.target).value)"
+      >
+        @for (option of sortOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+    <app-cards [cards]="cardsData"></app-cards>
+  }
+</div>

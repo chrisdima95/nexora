@@ -1,0 +1,31 @@
+<div
+  class="product-accordion"
+  [class.product-accordion--flat]="appearance() === 'flat'"
+  [class.is-open]="expanded()"
+>
+  <button
+    type="button"
+    class="product-accordion-header"
+    [id]="headerElementId()"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-controls]="panelElementId()"
+    (click)="toggle()"
+  >
+    <span class="product-accordion-title">{{ title() }}</span>
+    <span class="product-accordion-chevron" aria-hidden="true"></span>
+  </button>
+
+  <div
+    class="product-accordion-panel"
+    [class.is-open]="expanded()"
+    [id]="panelElementId()"
+    role="region"
+    [attr.aria-labelledby]="headerElementId()"
+  >
+    <div class="product-accordion-panel-inner">
+      <div class="product-accordion-body">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+</div>

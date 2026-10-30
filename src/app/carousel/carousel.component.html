@@ -1,0 +1,78 @@
+<section
+  class="hero-carousel"
+  role="region"
+  aria-roledescription="carousel"
+  aria-label="In evidenza sul carosello"
+  tabindex="0"
+>
+  <div class="hero-slides" aria-live="polite">
+    @for (slide of slides; track slide.imgSrc; let i = $index) {
+      <div
+        class="hero-slide"
+        [class.is-active]="currentIndex() === i"
+        [attr.aria-hidden]="currentIndex() === i ? null : true"
+      >
+        @if (mediaReadySlides().has(i)) {
+        <div class="hero-media-pane">
+          <div class="hero-media">
+            <img
+              class="hero-image"
+              [src]="slide.imgSrc"
+              [alt]="slide.imgAlt"
+              width="1536"
+              height="1024"
+              [attr.fetchpriority]="i === 0 ? 'high' : null"
+              [attr.loading]="i === 0 ? 'eager' : null"
+              decoding="async"
+            />
+          </div>
+        </div>
+        }
+        <div class="hero-scrim" aria-hidden="true"></div>
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <p class="hero-kicker">{{ slide.kicker }}</p>
+            <p class="hero-title">{{ slide.title }}</p>
+            <p class="hero-subtitle">{{ slide.subtitle }}</p>
+            <a class="hero-cta" [routerLink]="slide.ctaRoute" [attr.aria-label]="slide.ctaLabel + ': ' + slide.title">
+              {{ slide.ctaLabel }}
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="hero-controls">
+    <button
+      type="button"
+      class="hero-nav hero-nav-prev"
+      (click)="prev()"
+      aria-label="Mostra la slide precedente del carosello"
+    >
+      <span aria-hidden="true">‹</span>
+    </button>
+    <button
+      type="button"
+      class="hero-nav hero-nav-next"
+      (click)="next()"
+      aria-label="Mostra la slide successiva del carosello"
+    >
+      <span aria-hidden="true">›</span>
+    </button>
+  </div>
+
+  <div class="hero-dots" role="tablist" aria-label="Seleziona una slide">
+    @for (slide of slides; track slide.imgSrc; let i = $index) {
+      <button
+        type="button"
+        class="hero-dot"
+        [class.is-active]="currentIndex() === i"
+        (click)="goTo(i)"
+        role="tab"
+        [attr.aria-selected]="currentIndex() === i"
+        [attr.aria-label]="'Vai alla slide ' + (i + 1) + ': ' + slide.title"
+      ></button>
+    }
+  </div>
+</section>

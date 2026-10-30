@@ -1,0 +1,46 @@
+<div class="login-page">
+  <div class="login-page-inner">
+    <div class="login-form">
+      <h2>{{ isRegisterMode ? 'Crea account' : 'Accedi al tuo account' }}</h2>
+
+      @if(!isRegisterMode) {
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <label for="username">Username:</label>
+          <input type="text" formControlName="username" id="username" />
+
+          <label for="password">Password:</label>
+          <input type="password" formControlName="password" id="password" />
+
+          <button type="submit" [disabled]="loginForm.invalid">Accedi</button>
+        </form>
+      } @else {
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+          <label for="register-username">Username:</label>
+          <input type="text" formControlName="username" id="register-username" />
+
+          <label for="register-first-name">Nome:</label>
+          <input type="text" formControlName="first_name" id="register-first-name" />
+
+          <label for="register-last-name">Cognome:</label>
+          <input type="text" formControlName="last_name" id="register-last-name" />
+
+          <label for="register-email">Email:</label>
+          <input type="email" formControlName="email" id="register-email" />
+
+          <label for="register-password">Password:</label>
+          <input type="password" formControlName="password" id="register-password" />
+
+          <button type="submit" [disabled]="registerForm.invalid">Registrati</button>
+        </form>
+      }
+
+      @if(errorMessage) {
+        <p class="error-message">{{ errorMessage }}</p>
+      }
+
+      <button type="button" class="logout-btn" (click)="isRegisterMode = !isRegisterMode">
+        {{ isRegisterMode ? 'Hai già un account? Accedi' : 'Nuovo utente? Registrati' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,212 @@
+<div class="navbar-wrapper">
+  <!-- Navbar unificata: Logo + Search + Link di navigazione -->
+  <nav class="navbar navbar-unified" [class.checkout-navbar]="isCheckoutPage" aria-label="Navigazione principale">
+    <div class="navbar-container-unified">
+      <!-- Top row: Logo + Search + Icons -->
+      <div class="navbar-top-row">
+        <div class="navbar-brand">
+          <a routerLink="/" class="navbar-logo" aria-label="Nexora — vai alla home">
+            <img src="/00logo.png" alt="Nexora" class="navbar-logo-img" width="160" height="40" fetchpriority="low" decoding="async" />
+          </a>
+        </div>
+
+        @if(!isCheckoutPage) {
+        <div
+          class="search-container"
+          [class.search-container--route-active]="isSearchRoute"
+          #searchContainer
+        >
+          <form class="search-form" (ngSubmit)="onSearch()">
+            <div class="search-input-wrapper">
+              <label for="navbar-catalog-search" class="navbar-sr-only">Cerca prodotti nel catalogo</label>
+              <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <input 
+                #searchInput
+                id="navbar-catalog-search"
+                type="text" 
+                class="search-input" 
+                placeholder="Cosa stai cercando?" 
+                [(ngModel)]="searchQuery"
+                name="searchQuery"
+                autocomplete="off"
+                (ngModelChange)="onSearchInputChange($event)"
+                (focus)="onSearchInputFocus()"
+                (keydown)="onSearchInputKeydown($event)"
+                role="combobox"
+                aria-autocomplete="list"
+                [attr.aria-expanded]="isSearchDropdownOpen"
+                [attr.aria-activedescendant]="highlightedResultIndex >= 0 && liveResults[highlightedResultIndex] ? 'search-result-' + liveResults[highlightedResultIndex].id : null"
+                aria-controls="live-search-results"
+              />
+
+              @if(searchQuery.trim()) {
+                <button
+                  type="button"
+                  class="clear-search-btn"
+                  (click)="clearSearch($event)"
+                  aria-label="Svuota ricerca"
+                  title="Svuota ricerca"
+                >
+                  ×
+                </button>
+              }
+            </div>
+          </form>
+
+          @if(isSearchDropdownOpen) {
+            <div
+              class="search-dropdown"
+              [style.left.px]="searchDropdownLeft"
+              [style.top.px]="searchDropdownTop"
+              [style.width.px]="searchDropdownWidth"
+              role="listbox"
+              id="live-search-results"
+              aria-label="Suggerimenti ricerca"
+            >
+              @if(isSearching) {
+                <p class="search-dropdown-state">Ricerca in corso...</p>
+              } @else if(liveSearchError) {
+                <p class="search-dropdown-state">{{ liveSearchError }}</p>
+              } @else if(liveResults.length === 0) {
+                <p class="search-dropdown-state">Nessun prodotto trovato.</p>
+              } @else {
+                <ul class="search-results-list">
+                  @for(product of liveResults; track product.id; let i = $index) {
+                    <li>
+                      <button
+                        [id]="'search-result-' + product.id"
+                        type="button"
+                        class="search-result-item"
+                        [class.is-active]="highlightedResultIndex === i"
+                        [attr.aria-selected]="highlightedResultIndex === i"
+                        [attr.aria-label]="'Apri la scheda prodotto: ' + product.name"
+                        (mouseenter)="onResultHover(i)"
+                        (click)="onLiveResultSelect(product)"
+                      >
+                        <img [src]="getResultImage(product)" [alt]="product.name" width="52" height="52" loading="lazy" decoding="async" />
+                        <span class="search-result-info">
+                          <span class="search-result-name" [attr.title]="product.name">
+                            @for(part of getHighlightedNameParts(product.name); track $index) {
+                              <span [class.search-result-name-match]="part.match">{{ part.text }}</span>
+                            }
+                          </span>
+                          @if(product.category) {
+                            <span class="search-result-category">{{ product.category }}</span>
+                          }
+                          <span class="search-result-price">{{ formatPrice(product.price) }}</span>
+                        </span>
+                      </button>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </div>
+        }
+
+        <div class="navbar-actions" role="group" aria-label="Azioni rapide">
+          @if(!isCheckoutPage) {
+            <a
+              [routerLink]="loginService.isAuthenticated() ? '/account' : '/login'"
+              routerLinkActive="navbar-action-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              ariaCurrentWhenActive="page"
+              class="navbar-icon"
+              [attr.aria-label]="loginService.isAuthenticated() ? 'Vai alla tua area account' : 'Accedi al tuo account'"
+              title="Account"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </a>
+            
+            <a
+              routerLink="/carrello"
+              routerLinkActive="navbar-action-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              ariaCurrentWhenActive="page"
+              class="navbar-icon cart-icon"
+              [attr.aria-label]="cartAriaLabel"
+              title="Carrello"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              @if(cartCount > 0) {
+                <span class="cart-badge" aria-hidden="true">{{ cartCount }}</span>
+              }
+            </a>
+          } @else {
+            <div class="secure-payment">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>PAGAMENTO SICURO</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Bottom row: Navigation links -->
+      @if(!isCheckoutPage) {
+      <div class="navbar-bottom-row">
+        <ul class="navbar-menu">
+          <li>
+            <a
+              routerLink="/telefoni"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: false }"
+              ariaCurrentWhenActive="page"
+              class="nav-link"
+            >Telefoni</a>
+          </li>
+          <li>
+            <a
+              routerLink="/elettrodomestici"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: false }"
+              ariaCurrentWhenActive="page"
+              class="nav-link"
+            >Elettrodomestici</a>
+          </li>
+          <li>
+            <a
+              routerLink="/computer"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: false }"
+              ariaCurrentWhenActive="page"
+              class="nav-link"
+            >Computer</a>
+          </li>
+          <li>
+            <a
+              routerLink="/tv"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: false }"
+              ariaCurrentWhenActive="page"
+              class="nav-link"
+            >TV</a>
+          </li>
+          <li>
+            <a
+              routerLink="/offerte"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: false }"
+              ariaCurrentWhenActive="page"
+              class="nav-link"
+            >Offerte</a>
+          </li>
+        </ul>
+      </div>
+      }
+    </div>
+  </nav>
+</div>

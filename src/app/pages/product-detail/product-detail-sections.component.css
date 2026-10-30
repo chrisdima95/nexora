@@ -1,0 +1,137 @@
+.product-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 3.2vw, 2.25rem);
+  align-items: start;
+}
+
+.product-content-grid--editorial-lower {
+  gap: 0;
+}
+
+.content-column {
+  margin: 0;
+  padding: 0;
+}
+
+.content-column-specs {
+  margin-top: clamp(1.25rem, 2.6vw, 1.85rem);
+  padding-top: clamp(1.2rem, 2.4vw, 1.65rem);
+  border-top: 1px solid rgba(15, 23, 42, 0.075);
+}
+
+/* Padding verticale corpo accordion (variante flat: niente padding orizzontale “da card”) */
+:host .content-column-desc ::ng-deep .product-accordion--flat .product-accordion-body {
+  padding: 1.05rem 0 0.35rem;
+}
+
+:host .content-column-specs ::ng-deep .product-accordion--flat .product-accordion-body {
+  padding: 0.85rem 0 0.15rem;
+}
+
+.description-body {
+  max-width: min(88ch, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.content-column-desc .description-body p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.82;
+  letter-spacing: 0.01em;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  color: var(--color-text-muted);
+  color: color-mix(in srgb, var(--color-text-strong) 22%, var(--color-text-muted));
+}
+
+.content-column-desc .empty-hint {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.82;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted);
+  color: color-mix(in srgb, var(--color-text-strong) 22%, var(--color-text-muted));
+}
+
+.spec-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.spec-sheet-row {
+  display: grid;
+  grid-template-columns: minmax(0, min(40%, 13rem)) minmax(0, 1fr);
+  gap: 0.75rem 1.35rem;
+  padding: 0.78rem 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.065);
+  align-items: start;
+}
+
+.spec-sheet-row:nth-child(even) {
+  background: transparent;
+}
+
+.spec-sheet-row:last-child {
+  border-bottom: none;
+}
+
+.spec-key {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted);
+  line-height: 1.52;
+}
+
+.spec-value {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+  font-weight: 500;
+  color: var(--color-text-strong);
+}
+
+.spec-sheet-row-line {
+  grid-template-columns: 1fr;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.spec-line {
+  font-size: 0.9375rem;
+  line-height: 1.68;
+  overflow-wrap: break-word;
+  color: var(--color-text-strong);
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .spec-sheet-row-kv {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .spec-key {
+    font-size: 0.8rem;
+  }
+
+  .spec-value,
+  .spec-line {
+    font-size: 0.9rem;
+  }
+
+  :host .content-column-specs ::ng-deep .product-accordion--flat .product-accordion-body {
+    padding: 0.75rem 0 0.05rem;
+  }
+
+  :host .content-column-desc ::ng-deep .product-accordion--flat .product-accordion-body {
+    padding: 0.95rem 0 0.25rem;
+  }
+}

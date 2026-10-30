@@ -1,0 +1,30 @@
+<div class="success-container">
+  <section class="success-card">
+    <div class="icon-wrap" aria-hidden="true">✓</div>
+    <h1>Ordine effettuato con successo</h1>
+    <p class="description">
+      Grazie per aver acquistato su Nexora. Puoi consultare i dettagli dell'ordine nella tua area personale.
+    </p>
+
+    @if(isLoading) {
+      <div class="order-meta order-meta--loading">
+        <h2>Riepilogo ordine</h2>
+        <p class="state-message">Stiamo recuperando i dettagli dell'ordine...</p>
+      </div>
+    } @else if(loadError) {
+      <p class="state-message state-message--error">{{ loadError }}</p>
+    } @else if(order) {
+      <div class="order-meta">
+        <h2>Riepilogo ordine</h2>
+        <p><strong>Numero ordine:</strong> {{ order.order_number }}</p>
+        <p><strong>Totale:</strong> {{ formatCurrency(order.total_amount) }}</p>
+        <p><strong>Data:</strong> {{ formatDate(order.created_at) }}</p>
+      </div>
+    }
+
+    <div class="actions">
+      <a routerLink="/home" class="btn-secondary">Torna alla home</a>
+      <a routerLink="/account" class="btn-primary">Vai ai miei ordini</a>
+    </div>
+  </section>
+</div>
