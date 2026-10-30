@@ -188,11 +188,15 @@ describe('product-ui helpers', () => {
       {
         id: 11,
         name: 'SAMSUNG TV',
+        brand: 'Samsung',
         price: '399.00',
         image_url: '/x.jpg',
         category: 'tv',
         description: 'Descrizione lunga da non mostrare in card categoria quando si usano le specifiche.',
-        technical_specs: 'TV LED 50 pollici\nUHD 4K\nSmart TV\nHDR10'
+        technical_specs: 'TV LED 50 pollici\nUHD 4K\nSmart TV\nHDR10',
+        is_featured: false,
+        stock_quantity: 10,
+        availability_status: 'in_stock'
       },
       { categoryListingFrom: 'tv' }
     );
@@ -215,12 +219,16 @@ describe('product-ui helpers', () => {
       {
         id: 2,
         name: 'Prodotto test',
+        brand: 'Demo',
         price: '10.00',
         original_price: '20.00',
         image_url: '/x.jpg',
         category: 'computer',
         description: 'Testo marketing che non deve comparire in card offerte.',
-        technical_specs: 'Processore: Intel Core i7\nRAM: 16 GB\nSSD: 512 GB'
+        technical_specs: 'Processore: Intel Core i7\nRAM: 16 GB\nSSD: 512 GB',
+        is_featured: false,
+        stock_quantity: 10,
+        availability_status: 'in_stock'
       },
       { categoryListingFrom: catalogListingCategorySlugFromProduct('computer') }
     );

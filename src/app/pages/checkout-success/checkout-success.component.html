@@ -1,10 +1,14 @@
 <div class="success-container">
   <section class="success-card">
-    <div class="icon-wrap" aria-hidden="true">✓</div>
-    <h1>Ordine effettuato con successo</h1>
-    <p class="description">
-      Grazie per aver acquistato su Nexora. Puoi consultare i dettagli dell'ordine nella tua area personale.
-    </p>
+    @if(order) {
+      <div class="icon-wrap" aria-hidden="true">✓</div>
+      <h1>Ordine effettuato con successo</h1>
+      <p class="description">
+        Grazie per aver acquistato su Nexora. Puoi consultare i dettagli dell'ordine nella tua area personale.
+      </p>
+    } @else {
+      <h1>{{ isLoading ? 'Caricamento ordine' : 'Dettagli ordine non disponibili' }}</h1>
+    }
 
     @if(isLoading) {
       <div class="order-meta order-meta--loading">
@@ -12,7 +16,7 @@
         <p class="state-message">Stiamo recuperando i dettagli dell'ordine...</p>
       </div>
     } @else if(loadError) {
-      <p class="state-message state-message--error">{{ loadError }}</p>
+      <p class="state-message state-message--error" role="alert">{{ loadError }}</p>
     } @else if(order) {
       <div class="order-meta">
         <h2>Riepilogo ordine</h2>

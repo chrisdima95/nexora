@@ -20,7 +20,11 @@ describe('home-product-selection', () => {
     original_price: original ?? null,
     image_url: '',
     category,
-    description: ''
+    description: '',
+    technical_specs: '',
+    is_featured: false,
+    stock_quantity: 10,
+    availability_status: 'in_stock'
   });
 
   it('computes discount percentage from list price and current price', () => {

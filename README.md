@@ -169,13 +169,24 @@ Gli script principali disponibili sono `npm.cmd run start`, `npm.cmd run build` 
 
 ## Test e verifiche
 
-Nell'ultima verifica tecnica sono stati ottenuti i seguenti risultati:
+Le verifiche tecniche finali hanno prodotto i seguenti risultati:
 
-- **15 test backend superati** su un database SQLite temporaneo separato: ordini validi, prodotti esauriti, quantità eccessive, duplicati, più articoli, input non validi e rollback anche in caso di errore di persistenza.
+- **15 test backend superati nella precedente verifica** su un database SQLite temporaneo separato: ordini validi, prodotti esauriti, quantità eccessive, duplicati, più articoli, input non validi e rollback anche in caso di errore di persistenza.
 - Test concorrente su due richieste per l'ultima unità disponibile: una sola vendita confermata, senza stock negativo.
 - Test backend del flusso registrazione, login JWT, refresh, creazione ordine e storico, con verifica dell'isolamento tra utenti.
-- **21 test frontend mirati superati** in Chrome headless: accesso al checkout, registrazione, conservazione del carrello, conferma, errori di scorte e gestione della sessione dopo il refresh JWT.
-- Controllo TypeScript dell'applicazione superato. Fixture verificata con migrazioni e caricamento su SQLite nuovo, confronto dei 52 prodotti, API e risoluzione delle immagini.
+- **Suite frontend completa: 80 test superati, 0 falliti, 0 saltati** in Chrome headless. Comprende 11 nuovi test della conferma ordine per SSR, navigazione dal checkout, aggiornamento asincrono della vista `OnPush`, stato di navigazione obsoleto, ID invalidi ed errori HTTP `401`, `403`, `404` e `500`.
+- **Controlli TypeScript dell'applicazione e dei test superati**; compilazione Angular development superata.
+- Catalogo riproducibile tramite fixture: migrazioni e caricamento su SQLite nuovo verificati, con confronto dei **52 prodotti**, API e risoluzione delle immagini.
+- **Verifica end-to-end dei flussi principali superata**, con Angular e Django avviati contemporaneamente e Chrome headless reale: catalogo, categorie, ricerca, filtri, dettaglio prodotto, registrazione, login JWT, rinnovo token e logout.
+- Carrello persistente, checkout autenticato, creazione e persistenza dell'ordine e storico con dettagli verificati nel browser e confrontati con il database temporaneo. Verificati decremento delle scorte, rollback dell'intera operazione per disponibilità insufficiente e conservazione del carrello dopo l'errore.
+- Conferma ordine corretta e verificata dopo l'acquisto, con accesso diretto e ricaricamento: riepilogo aggiornato e rendering SSR senza `ReferenceError`. Verificati ordine inesistente e ordine di un altro utente (`404`), accesso anonimo (`401`) e assenza di eccezioni JavaScript bloccanti. I casi `403` e `500` sono coperti dai test del componente.
+
+Le verifiche integrate hanno utilizzato esclusivamente utenti dimostrativi, un database SQLite temporaneo e una configurazione Django isolata; il database originale è rimasto invariato. SSR renderizza lo stato iniziale di caricamento della conferma; il riepilogo viene recuperato nel browser tramite l'API autenticata, che verifica la proprietà dell'ordine anche quando si arriva dal checkout.
+
+
+**Build production Angular: completata correttamente il 30 ottobre 2026.**
+Il comando `npm.cmd run build` ha generato i bundle frontend e SSR senza errori. È presente un warning non bloccante relativo al budget del bundle iniziale: 523,68 kB rispetto al limite configurato di 520 kB.
+
 
 I test backend sono in [backend/api/tests.py](backend/api/tests.py). Da `backend`, con `DJANGO_SECRET_KEY` configurata:
 
@@ -183,17 +194,17 @@ I test backend sono in [backend/api/tests.py](backend/api/tests.py). Da `backend
 .\.venv\Scripts\python.exe manage.py test api
 ```
 
-Django utilizza un database di test separato. I test frontend mirati sono in [checkout.component.spec.ts](src/app/pages/checkout/checkout.component.spec.ts), [checkout-review.component.spec.ts](src/app/pages/checkout-review/checkout-review.component.spec.ts) e [auth.interceptor.spec.ts](src/app/interceptors/auth.interceptor.spec.ts).
+Django utilizza un database di test separato. Tra i test frontend del flusso di acquisto figurano [checkout.component.spec.ts](src/app/pages/checkout/checkout.component.spec.ts), [checkout-review.component.spec.ts](src/app/pages/checkout-review/checkout-review.component.spec.ts), [checkout-success.component.spec.ts](src/app/pages/checkout-success/checkout-success.component.spec.ts) e [auth.interceptor.spec.ts](src/app/interceptors/auth.interceptor.spec.ts).
 
-**La suite frontend completa non è superata:** presenta tre errori TypeScript preesistenti nei dati di prova di `src/app/services/home-product-selection.spec.ts` e `src/app/services/product-ui.spec.ts`, non allineati ai campi obbligatori di `Product`. Il comando completo, dalla cartella principale, è:
+Per eseguire la suite frontend completa, dalla cartella principale:
 
 ```powershell
 npm.cmd test -- --watch=false --browsers=ChromeHeadless
 ```
 
-Richiede Chrome installato. La selezione con `--include` non basta a evitare quegli errori, perché `tsconfig.spec.json` include tutti i test. I 21 test mirati sono stati eseguiti con una configurazione TypeScript temporanea limitata ai tre file indicati, non inclusa nel repository.
+Richiede Chrome installato. La suite completa è stata eseguita con la configurazione del repository, senza escludere test.
 
-Non è ancora stato verificato un test end-to-end completo con Angular e Django avviati insieme. Non sono stati eseguiti test di carico elevato.
+Non sono stati eseguiti test di carico elevato né verifiche su un deployment pubblico.
 
 ## Limitazioni
 
@@ -204,12 +215,11 @@ Nexora è una demo locale, non un'applicazione pronta per la produzione.
 - SQLite serializza le scritture: con contesa prolungata il servizio può rispondere `503`, richiedendo un nuovo tentativo. Il checkout non implementa idempotenza per ritentativi dopo errori di rete.
 - Access e refresh token sono conservati nel `localStorage`, con esposizione in caso di XSS. Il logout cancella lo stato locale senza revocare i token sul server; i refresh token non vengono ruotati. Recupero password non implementato.
 - Configurazione Django di sviluppo con `DEBUG=True`; sicurezza e configurazione del deployment richiedono ulteriori interventi.
-- Percorsi SSR del checkout da verificare: la pagina di successo accede a `history`, API del browser, senza una protezione esplicita per il server.
 - Provenienza e licenze delle immagini e dei testi del catalogo da verificare prima di una distribuzione pubblica definitiva.
 
 ## Sviluppi futuri
 
-- Allineare i test frontend esistenti e aggiungere test end-to-end del flusso completo.
+- Integrare le verifiche end-to-end già eseguite in una suite ripetibile nel repository e nella futura pipeline CI/CD.
 - Rafforzare gestione e revoca delle sessioni, protezioni contro abusi e configurazione di sicurezza.
 - Containerizzare frontend e backend con Docker.
 - Integrare una pipeline CI/CD e predisporre un deployment dimostrativo.

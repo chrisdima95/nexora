@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OrderService } from '../../services/order.service';
 import { Order } from '../../models/order.model';
 
@@ -12,6 +14,8 @@ import { Order } from '../../models/order.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckoutSuccessComponent implements OnInit {
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly euroFormatter = new Intl.NumberFormat('it-IT', {
     style: 'currency',
     currency: 'EUR'
@@ -28,22 +32,20 @@ export class CheckoutSuccessComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
     const orderId = this.route.snapshot.paramMap.get('id');
-    if (!orderId) {
+    if (!orderId || !/^[1-9]\d*$/.test(orderId)) {
       this.isLoading = false;
       this.loadError = "Non è stato possibile recuperare i dettagli dell'ordine.";
       return;
     }
 
-    const orderFromState = this.getOrderFromNavigationState(orderId);
-    if (orderFromState) {
-      this.order = orderFromState;
-      this.isLoading = false;
+    // JWTs live in browser storage. Render a neutral loading state on the server;
+    // always let the authenticated API validate ownership, including after checkout.
+    if (!this.isBrowser) {
       return;
     }
 
@@ -51,24 +53,18 @@ export class CheckoutSuccessComponent implements OnInit {
       next: (order) => {
         this.order = order;
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
         this.isLoading = false;
-        this.loadError = "Non è stato possibile recuperare i dettagli dell'ordine.";
+        this.loadError = error.status === 401 || error.status === 403
+          ? 'Sessione scaduta o non autorizzata. Effettua di nuovo il login.'
+          : error.status === 404
+            ? 'Ordine non trovato o non accessibile con questo account.'
+            : "Non è stato possibile recuperare i dettagli dell'ordine.";
+        this.cdr.markForCheck();
       }
     });
-  }
-
-  private getOrderFromNavigationState(orderId: string): Order | null {
-    const navigationState = this.router.getCurrentNavigation()?.extras.state as { order?: Order } | undefined;
-    const historyState = history.state as { order?: Order } | undefined;
-    const candidate = navigationState?.order ?? historyState?.order;
-
-    if (!candidate) {
-      return null;
-    }
-
-    return String(candidate.id) === orderId ? candidate : null;
   }
 
   formatCurrency(value: number | string | null | undefined): string {
